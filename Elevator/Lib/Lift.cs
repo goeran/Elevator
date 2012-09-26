@@ -6,7 +6,7 @@ namespace Elevator.Lib
 {
     public class Lift
     {
-        private readonly List<Level> levels = new List<Level>();
+        private readonly SortedList<int, Level> levels = new SortedList<int, Level>();
 
         public Lift(ILogger logger)
         {
@@ -15,12 +15,34 @@ namespace Elevator.Lib
             logger.Log("Elevator initialized");
         }
 
+        public Level CurrentLevel { get; private set; }
+
+        public void AddLevel(params Level[] newLevels)
+        {
+            foreach (var newLevel in newLevels)
+            {
+                AddLevel(newLevel);
+            }
+        }
+
         public void AddLevel(Level level)
         {
             if (level == null) throw new ArgumentNullException();
-            if (levels.Any(l => l.Number == level.Number)) throw new ArgumentException("Level already exists");
+            if (levels.ContainsKey(level.Number)) throw new ArgumentException("Level already exists");
 
-            levels.Add(level);
+            levels.Add(level.Number, level);
+
+            CurrentLevel = levels.First().Value;
+        }
+
+        public void Up()
+        {
+            if (!levels.Any()) throw new InvalidOperationException("No levels exists");
+
+            var index = levels.IndexOfValue(CurrentLevel);
+            if (index >= levels.Count - 1) throw new InvalidOperationException("On the top level");
+
+            CurrentLevel = levels.ElementAt(++index).Value;
         }
     }
 }

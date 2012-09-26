@@ -1,4 +1,4 @@
-﻿using Elevator.Tests.Lib;
+﻿using Elevator.Lib;
 
 namespace Elevator.Tests.Fakes
 {

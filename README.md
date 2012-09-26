@@ -13,3 +13,5 @@ The framework aims to be a generic framework where you can plug into and make it
 
 The migration tool is a console application that can be executed both manually and by a build server. 
 
+##Production quality?
+Nope, this is bleeding edge and a tool built by me to be used by me. I aim to make it simple, and I’ll try to nurture it to become into production ready state, where it can be used by you and other that has to deal with data migration. As for now I just needed a repository where I can work on this tool:)

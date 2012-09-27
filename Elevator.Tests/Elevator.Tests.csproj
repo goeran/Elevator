@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fakes\FakeDataStorage.cs" />
     <Compile Include="Fakes\FakeLogger.cs" />
     <Compile Include="Lib\LevelTests.cs" />
     <Compile Include="Lib\LiftTests.cs" />

@@ -9,11 +9,13 @@ namespace Elevator.Lib
         private readonly SortedList<int, Level> levels = new SortedList<int, Level>();
         private bool isStarted;
         private ILogger logger;
+        private IDataStorage dataStorage;
 
-        public Lift(ILogger logger)
+        public Lift(ILogger logger, IDataStorage dataStorage)
         {
-            if (logger == null) throw new ArgumentNullException();
+            if (logger == null || dataStorage == null) throw new ArgumentNullException();
             this.logger = logger;
+            this.dataStorage = dataStorage;
         }
 
         private void Announce(string message, params object[] objects)

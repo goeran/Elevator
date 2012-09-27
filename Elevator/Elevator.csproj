@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Lib\IDataStorage.cs" />
     <Compile Include="Lib\ILogger.cs" />
     <Compile Include="Lib\Level.cs" />
     <Compile Include="Lib\Lift.cs" />

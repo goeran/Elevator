@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Elevator.Lib;
 using Elevator.Tests.Fakes;
 using NUnit.Framework;
@@ -15,7 +14,14 @@ namespace Elevator.Tests.Lib
             [ExpectedException(typeof(ArgumentNullException))]
             public void It_requires_logger_to_be_specified()
             {
-                 new Lift(null);
+                 new Lift(null, new FakeDataStorage());
+            }
+
+            [Test]
+            [ExpectedException(typeof(ArgumentNullException))]
+            public void It_requires_datastorage_to_be_specified()
+            {
+                new Lift(new FakeLogger(), null);
             }
         }
 
@@ -29,7 +35,7 @@ namespace Elevator.Tests.Lib
             public void Setup()
             {
                 fakeLogger = new FakeLogger();
-                lift = new Lift(fakeLogger);
+                lift = new Lift(fakeLogger, new FakeDataStorage());
             }
 
             [Test]
@@ -66,7 +72,7 @@ namespace Elevator.Tests.Lib
             public void Setup()
             {
                 fakeLogger = new FakeLogger();
-                lift = new Lift(fakeLogger);
+                lift = new Lift(fakeLogger, new FakeDataStorage());
             }
 
             [Test]
@@ -125,7 +131,7 @@ namespace Elevator.Tests.Lib
             [SetUp]
             public void Setup()
             {
-                lift = new Lift(new FakeLogger());
+                lift = new Lift(new FakeLogger(), new FakeDataStorage());
             }
 
             [Test]

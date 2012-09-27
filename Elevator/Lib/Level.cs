@@ -14,5 +14,38 @@ namespace Elevator.Lib
 
         public int Number { get; private set; }
         public string Comment { get; private set; }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            var otherLevel = obj as Level;
+            return otherLevel.Number.Equals(Number);
+        }
+
+        public override int GetHashCode()
+        {
+            return Number.GetHashCode();
+        }
+
+        public static bool operator ==(Level a, Level b)
+        {
+            //if both are nulls
+            if (((object)a == null) && ((object)b == null)) return true;
+
+            //if a is null
+            if ((object)a == null) return false;
+
+            //equality handled by equals method
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(Level a, Level b)
+        {
+            return !a.Equals(b);
+        }
     }
 }

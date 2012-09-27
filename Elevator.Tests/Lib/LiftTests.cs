@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Elevator.Lib;
 using Elevator.Tests.Fakes;
 using NUnit.Framework;
@@ -182,6 +183,26 @@ namespace Elevator.Tests.Lib
 
                 Assert.IsNull(fakeLevelDataStorage.StoredCurrentLevel, "Current level should not have been stored");
             }
+        }
+
+        [TestFixture]
+        public class When_start_for_the_first_time_and_lift_fails
+        {
+            [Test]
+            public void It_will_announce_the_failed_lift()
+            {
+                var level1 = new Level(1, "init setup", () => { throw new Exception("Failed because db is down"); });
+                var fakeLogger = new FakeLogger();
+                var fakeLevelDataStorage = new FakeLevelDataStorage();
+                fakeLevelDataStorage.StubHasStoredLevelInfo = false;
+                var lift = new Lift(fakeLogger, fakeLevelDataStorage);
+                lift.AddLevel(level1);
+
+                lift.Start();
+
+                Assert.AreEqual("Failed to lift: Level 1, init setup", fakeLogger.Entries[fakeLogger.Entries.Count - 2]);
+                Assert.IsTrue(fakeLogger.LastEntry.Contains(new Exception("Failed because db is down").ToString()));
+            }             
         }
 
         [TestFixture]

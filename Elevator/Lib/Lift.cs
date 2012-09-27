@@ -53,13 +53,14 @@ namespace Elevator.Lib
             {
                 var storedLevel = levelDataStorage.GetCurrentLevel();
                 CurrentLevel = levels[storedLevel.Number];
+                Announce("Current level: {0}, {1}", CurrentLevel.Number, CurrentLevel.Comment);
             }
             else
             {
                 CurrentLevel = levels.First().Value;
+                Announce("Current level: {0}, {1}", CurrentLevel.Number, CurrentLevel.Comment);
                 LiftUp();
             }
-            Announce("Current level: {0}, {1}", CurrentLevel.Number, CurrentLevel.Comment);
         }
 
         private void StoreCurrentLevelInfo()
@@ -88,6 +89,8 @@ namespace Elevator.Lib
             }
             catch (Exception ex)
             {
+                Announce("Failed to lift: Level {0}, {1}", CurrentLevel.Number, CurrentLevel.Comment);
+                Announce(ex.ToString());
             }
         }
     }

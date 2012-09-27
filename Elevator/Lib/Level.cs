@@ -5,20 +5,18 @@ namespace Elevator.Lib
     public class Level
     {
         private readonly Action up;
-        private readonly Action down;
 
-        public Level(int number, string comment) : this(number, comment, () => {}, () => {})
+        public Level(int number, string comment) : this(number, comment, () => {})
         {
         }
 
-        public Level(int number, string comment, Action up, Action down)
+        public Level(int number, string comment, Action up)
         {
-            if (comment == null || up == null && down == null) 
+            if (comment == null || up == null) 
                 throw new ArgumentNullException();
 
             Number = number;
             Comment = comment;
-            this.down = down;
             this.up = up;
         }
 

@@ -57,8 +57,7 @@ namespace Elevator.Lib
             else
             {
                 CurrentLevel = levels.First().Value;
-                CurrentLevel.Up();
-                StoreCurrentLevelInfo();
+                LiftUp();
             }
             Announce("Current level: {0}, {1}", CurrentLevel.Number, CurrentLevel.Comment);
         }
@@ -76,8 +75,20 @@ namespace Elevator.Lib
             if (currentLevelNumber >= levels.Count - 1) throw new InvalidOperationException("On the top level");
             var newCurrentLevelNumber = ++currentLevelNumber;
             CurrentLevel = levels.ElementAt(newCurrentLevelNumber).Value;
-            CurrentLevel.Up();
-            StoreCurrentLevelInfo();
+
+            LiftUp();
+        }
+
+        private void LiftUp()
+        {
+            try
+            {
+                CurrentLevel.Up();
+                StoreCurrentLevelInfo();
+            }
+            catch (Exception ex)
+            {
+            }
         }
     }
 }

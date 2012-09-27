@@ -45,12 +45,33 @@ namespace Elevator.Tests.Lib
             }
 
             [Test]
+            [ExpectedException(
+                typeof(ArgumentException),
+                ExpectedMessage = "Failed to create an instance of 'CustomElevatorLevelWithError'. Check the code in the public constructor with zero args")]
+            public void It_requires_that_the_public_constructor_will_not_throw_an_exception()
+            {
+                levelFactory.NewLevel(typeof (CustomElevatorLevelWithError));
+            }
+
+            [Test]
             public void It_will_extract_up_method()
             {
                 var level = levelFactory.NewLevel(typeof (CustomElevatorLevel));
                 level.Up();
                 Assert.AreEqual(1, CustomElevatorLevel.UpCallCount);
             }
+        }
+    }
+
+    internal class CustomElevatorLevelWithError
+    {
+        public CustomElevatorLevelWithError()
+        {
+            throw new Exception("Somethign bad happened");
+        }
+
+        public void Up()
+        {
         }
     }
 

@@ -63,21 +63,19 @@ namespace Elevator.Lib
             }
         }
 
-        private void StoreCurrentLevelInfo()
-        {
-            levelDataStorage.SaveCurrentLevel(CurrentLevel);
-        }
-
         public void Up()
         {
             if (!isStarted) throw new InvalidOperationException("Lift must be started before going up");
+            PrepareLiftToNextLevel();
+            LiftUp();
+        }
 
+        private void PrepareLiftToNextLevel()
+        {
             var currentLevelNumber = levels.IndexOfValue(CurrentLevel);
             if (currentLevelNumber >= levels.Count - 1) throw new InvalidOperationException("On the top level");
             var newCurrentLevelNumber = ++currentLevelNumber;
             CurrentLevel = levels.ElementAt(newCurrentLevelNumber).Value;
-
-            LiftUp();
         }
 
         private void LiftUp()
@@ -92,6 +90,11 @@ namespace Elevator.Lib
                 Announce("Failed to lift: Level {0}, {1}", CurrentLevel.Number, CurrentLevel.Comment);
                 Announce(ex.ToString());
             }
+        }
+
+        private void StoreCurrentLevelInfo()
+        {
+            levelDataStorage.SaveCurrentLevel(CurrentLevel);
         }
     }
 }

@@ -45,6 +45,9 @@ namespace Elevator.Lib
 
         public static bool operator !=(Level a, Level b)
         {
+            if ((object)a == null && (object)b != null) return true;
+            if ((object)a == null) return false;
+
             return !a.Equals(b);
         }
     }

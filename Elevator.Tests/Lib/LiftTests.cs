@@ -188,14 +188,23 @@ namespace Elevator.Tests.Lib
         [TestFixture]
         public class When_start_for_the_first_time_and_lift_fails
         {
+            private FakeLogger fakeLogger;
+            private FakeLevelDataStorage fakeLevelDataStorage;
+            private Lift lift;
+
+            [SetUp]
+            public void Setup()
+            {
+                fakeLogger = new FakeLogger();
+                fakeLevelDataStorage = new FakeLevelDataStorage();
+                fakeLevelDataStorage.StubHasStoredLevelInfo = false;
+                lift = new Lift(fakeLogger, fakeLevelDataStorage);
+            }
+
             [Test]
             public void It_will_announce_the_failed_lift()
             {
                 var level1 = new Level(1, "init setup", () => { throw new Exception("Failed because db is down"); });
-                var fakeLogger = new FakeLogger();
-                var fakeLevelDataStorage = new FakeLevelDataStorage();
-                fakeLevelDataStorage.StubHasStoredLevelInfo = false;
-                var lift = new Lift(fakeLogger, fakeLevelDataStorage);
                 lift.AddLevel(level1);
 
                 lift.Start();
@@ -294,5 +303,37 @@ namespace Elevator.Tests.Lib
                 Assert.AreEqual(level1, fakeLevelDataStorage.StoredCurrentLevel);
             }
         }
+
+        [TestFixture]
+        public class When_going_up_and_lift_fails
+        {
+            private FakeLogger fakeLogger;
+            private FakeLevelDataStorage fakeLevelDataStorage;
+            private Lift lift;
+
+            [SetUp]
+            public void Setup()
+            {
+                fakeLogger = new FakeLogger();
+                fakeLevelDataStorage = new FakeLevelDataStorage();
+                fakeLevelDataStorage.StubHasStoredLevelInfo = false;
+                lift = new Lift(fakeLogger, fakeLevelDataStorage);
+            }
+
+            [Test]
+            public void It_will_announce_the_failed_lift()
+            {
+                var level1 = new Level(1, "");
+                var level2 = new Level(2, "level 2", () => { throw new Exception("Failed because db is down"); });
+                lift.AddLevel(level1, level2);
+                lift.Start();
+
+                lift.Up();
+
+                Assert.AreEqual("Failed to lift: Level 2, level 2", fakeLogger.Entries[fakeLogger.Entries.Count - 2]);
+                Assert.IsTrue(fakeLogger.LastEntry.Contains(new Exception("Failed because db is down").ToString()));
+            }             
+        }
+
     }
 }

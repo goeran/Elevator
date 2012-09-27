@@ -14,7 +14,7 @@ namespace Elevator.Tests.Lib
             [ExpectedException(typeof(ArgumentNullException))]
             public void It_requires_logger_to_be_specified()
             {
-                 new Lift(null, new FakeDataStorage());
+                 new Lift(null, new FakeLevelDataStorage());
             }
 
             [Test]
@@ -35,7 +35,7 @@ namespace Elevator.Tests.Lib
             public void Setup()
             {
                 fakeLogger = new FakeLogger();
-                lift = new Lift(fakeLogger, new FakeDataStorage());
+                lift = new Lift(fakeLogger, new FakeLevelDataStorage());
             }
 
             [Test]
@@ -67,12 +67,15 @@ namespace Elevator.Tests.Lib
         {
             private FakeLogger fakeLogger;
             private Lift lift;
+            private FakeLevelDataStorage fakeLevelDataStorage;
 
             [SetUp]
             public void Setup()
             {
                 fakeLogger = new FakeLogger();
-                lift = new Lift(fakeLogger, new FakeDataStorage());
+                fakeLevelDataStorage = new FakeLevelDataStorage();
+                fakeLevelDataStorage.StubHasStoredLevelInfo = false;
+                lift = new Lift(fakeLogger, fakeLevelDataStorage);
             }
 
             [Test]
@@ -91,6 +94,18 @@ namespace Elevator.Tests.Lib
                 lift.Start();
 
                 Assert.AreEqual(level1, lift.CurrentLevel);
+            }
+
+            [Test]
+            public void It_will_set_the_current_level_based_on_current_level_stored_in_datastorage()
+            {
+                fakeLevelDataStorage.StubHasStoredLevelInfo = true;
+                fakeLevelDataStorage.StubGetCurrentLevel = 2;
+                lift.AddLevel(new Level(1, ""), new Level(2, ""), new Level(3, ""));
+                
+                lift.Start();
+
+                Assert.AreEqual(2, lift.CurrentLevel.Number);
             }
 
             [Test]
@@ -131,7 +146,9 @@ namespace Elevator.Tests.Lib
             [SetUp]
             public void Setup()
             {
-                lift = new Lift(new FakeLogger(), new FakeDataStorage());
+                var fakeDataStorage = new FakeLevelDataStorage();
+                fakeDataStorage.StubHasStoredLevelInfo = false;
+                lift = new Lift(new FakeLogger(), fakeDataStorage);
             }
 
             [Test]

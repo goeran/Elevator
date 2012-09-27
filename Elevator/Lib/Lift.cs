@@ -8,14 +8,14 @@ namespace Elevator.Lib
     {
         private readonly SortedList<int, Level> levels = new SortedList<int, Level>();
         private bool isStarted;
-        private ILogger logger;
-        private IDataStorage dataStorage;
+        private readonly ILogger logger;
+        private readonly ILevelDataStorage levelDataStorage;
 
-        public Lift(ILogger logger, IDataStorage dataStorage)
+        public Lift(ILogger logger, ILevelDataStorage levelDataStorage)
         {
-            if (logger == null || dataStorage == null) throw new ArgumentNullException();
+            if (logger == null || levelDataStorage == null) throw new ArgumentNullException();
             this.logger = logger;
-            this.dataStorage = dataStorage;
+            this.levelDataStorage = levelDataStorage;
         }
 
         private void Announce(string message, params object[] objects)
@@ -48,7 +48,16 @@ namespace Elevator.Lib
 
             isStarted = true;
             Announce("Elevator started");
-            CurrentLevel = levels.First().Value;
+            
+            if (levelDataStorage.HasStoredLevelInfo())
+            {
+                var storedLevel = levelDataStorage.GetCurrentLevel();
+                CurrentLevel = levels[storedLevel];
+            }
+            else
+            {
+                CurrentLevel = levels.First().Value;
+            }
             Announce("Current level: {0}, {1}", CurrentLevel.Number, CurrentLevel.Comment);
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Elevator.Lib;
 using Elevator.Tests.Fakes;
 using NUnit.Framework;
@@ -16,18 +17,6 @@ namespace Elevator.Tests.Lib
             {
                  new Lift(null);
             }
-        }
-
-        [TestFixture]
-        public class When_created
-        {
-            [Test]
-            public void It_will_log_initialized()
-            {
-                var logger = new FakeLogger();
-                var lift = new Lift(logger);
-                Assert.AreEqual("Elevator initialized", logger.LastEntry);
-            } 
         }
 
         [TestFixture]
@@ -59,11 +48,41 @@ namespace Elevator.Tests.Lib
             }
 
             [Test]
-            public void It_will_update_current_level()
+            public void It_will_announce_Level_was_added()
             {
-                var level1 = new Level(1, "");
-                
+                lift.AddLevel(new Level(1, "initial data structure"));
+
+                Assert.AreEqual("Level added: 1, initial data structure", fakeLogger.LastEntry);
+            }
+        }
+
+        [TestFixture]
+        public class When_start
+        {
+            private FakeLogger fakeLogger;
+            private Lift lift;
+
+            [SetUp]
+            public void Setup()
+            {
+                fakeLogger = new FakeLogger();
+                lift = new Lift(fakeLogger);
+            }
+
+            [Test]
+            [ExpectedException(typeof(InvalidOperationException), ExpectedMessage = "At least one level must be specified before the lift can be started")]
+            public void It_requires_at_least_one_level_bare_it_can_be_started()
+            {
+                lift.Start();
+            }
+
+            [Test]
+            public void It_will_set_current_level()
+            {
+                var level1 = new Level(1, "ground level");
                 lift.AddLevel(level1);
+
+                lift.Start();
 
                 Assert.AreEqual(level1, lift.CurrentLevel);
             }
@@ -74,10 +93,27 @@ namespace Elevator.Tests.Lib
                 var levelMinus1 = new Level(-1, "");
                 var level1 = new Level(1, "");
                 var level2 = new Level(2, "");
-                
                 lift.AddLevel(levelMinus1, level1, level2);
 
+                lift.Start();
+
                 Assert.AreEqual(levelMinus1, lift.CurrentLevel);
+            }
+
+            [Test]
+            public void It_will_announce_that_it_has_started()
+            {
+                lift.AddLevel(new Level(1, ""));
+                lift.Start();
+                Assert.AreEqual("Elevator started", fakeLogger.Entries[fakeLogger.Entries.Count - 2]);
+            }
+
+            [Test]
+            public void It_will_announce_current_level()
+            {
+                lift.AddLevel(new Level(1, "ground level"));
+                lift.Start();
+                Assert.AreEqual("Current level: 1, ground level", fakeLogger.LastEntry);
             }
         }
 
@@ -92,11 +128,11 @@ namespace Elevator.Tests.Lib
                 lift = new Lift(new FakeLogger());
             }
 
-
             [Test]
-            [ExpectedException(typeof(InvalidOperationException), ExpectedMessage = "No levels exists")]
-            public void It_throw_exception_if_it_doesnt_have_any_levels()
+            [ExpectedException(typeof(InvalidOperationException), ExpectedMessage = "Lift must be started before going up")]
+            public void It_requires_lift_to_be_started_before_going_up()
             {
+                lift.AddLevel(new Level(1, ""), new Level(2, ""));
                 lift.Up();
             }
 
@@ -106,6 +142,7 @@ namespace Elevator.Tests.Lib
                 var level1 = new Level(1, "");
                 var level2 = new Level(2, "");
                 lift.AddLevel(level1, level2);
+                lift.Start();
 
                 lift.Up();
 
@@ -119,6 +156,7 @@ namespace Elevator.Tests.Lib
                 var level1 = new Level(1, "");
                 var level2 = new Level(2, "");
                 lift.AddLevel(level1, level2);
+                lift.Start();
 
                 lift.Up();
                 lift.Up();

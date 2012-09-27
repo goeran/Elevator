@@ -66,6 +66,15 @@ namespace Elevator.Tests.Lib
             }
 
             [Test]
+            public void It_is_not_equal_when_id_differs()
+            {
+                Assert.IsFalse(level1.Equals(level2));
+                Assert.AreNotEqual(level2, level1);
+                Assert.IsFalse(level1.Equals(nullLevel));
+                Assert.AreNotEqual(nullLevel, level1);
+            }
+
+            [Test]
             public void It_support_equality_checking_using_the_operator()
             {
                 Assert.IsTrue(level1 == level1Copy, "Expected that equality was checked on values - not reference");

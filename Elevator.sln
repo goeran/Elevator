@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{22845A
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elevator.AcceptanceTests", "Elevator.AcceptanceTests\Elevator.AcceptanceTests.csproj", "{9794A3C1-88E3-44CA-BFBD-43A9BFECD38A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,16 @@ Global
 		{261D5BB9-4C3D-42BD-91D8-695B07A6C9BE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{261D5BB9-4C3D-42BD-91D8-695B07A6C9BE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{261D5BB9-4C3D-42BD-91D8-695B07A6C9BE}.Release|x86.ActiveCfg = Release|Any CPU
+		{9794A3C1-88E3-44CA-BFBD-43A9BFECD38A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9794A3C1-88E3-44CA-BFBD-43A9BFECD38A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9794A3C1-88E3-44CA-BFBD-43A9BFECD38A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{9794A3C1-88E3-44CA-BFBD-43A9BFECD38A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{9794A3C1-88E3-44CA-BFBD-43A9BFECD38A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9794A3C1-88E3-44CA-BFBD-43A9BFECD38A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9794A3C1-88E3-44CA-BFBD-43A9BFECD38A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9794A3C1-88E3-44CA-BFBD-43A9BFECD38A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{9794A3C1-88E3-44CA-BFBD-43A9BFECD38A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{9794A3C1-88E3-44CA-BFBD-43A9BFECD38A}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

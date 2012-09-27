@@ -100,7 +100,7 @@ namespace Elevator.Tests.Lib
             public void It_will_set_the_current_level_based_on_current_level_stored_in_datastorage()
             {
                 fakeLevelDataStorage.StubHasStoredLevelInfo = true;
-                fakeLevelDataStorage.StubGetCurrentLevel = 2;
+                fakeLevelDataStorage.StubGetCurrentLevel = new Level(2, "");
                 lift.AddLevel(new Level(1, ""), new Level(2, ""), new Level(3, ""));
                 
                 lift.Start();
@@ -151,7 +151,7 @@ namespace Elevator.Tests.Lib
 
                 lift.Start();
 
-                Assert.AreEqual(1, fakeLevelDataStorage.StoredCurrentLevel);
+                Assert.AreEqual(new Level(1, ""), fakeLevelDataStorage.StoredCurrentLevel);
             }
         }
 
@@ -198,8 +198,8 @@ namespace Elevator.Tests.Lib
 
                 lift.Up();
 
-                Assert.IsTrue(fakeLevelDataStorage.StoredCurrentLevel.HasValue, "Expected current level number to be stored");
-                Assert.AreEqual(2, fakeLevelDataStorage.StoredCurrentLevel);
+                Assert.IsTrue(fakeLevelDataStorage.StoredCurrentLevel != null, "Expected current level number to be stored");
+                Assert.AreEqual(new Level(2, ""), fakeLevelDataStorage.StoredCurrentLevel);
             }
 
             [Test]

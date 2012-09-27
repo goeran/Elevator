@@ -52,7 +52,7 @@ namespace Elevator.Lib
             if (levelDataStorage.HasStoredLevelInfo())
             {
                 var storedLevel = levelDataStorage.GetCurrentLevel();
-                CurrentLevel = levels[storedLevel];
+                CurrentLevel = levels[storedLevel.Number];
             }
             else
             {
@@ -64,7 +64,7 @@ namespace Elevator.Lib
 
         private void StoreCurrentLevelInfo()
         {
-            levelDataStorage.SaveCurrentLevel(CurrentLevel.Number);
+            levelDataStorage.SaveCurrentLevel(CurrentLevel);
         }
 
         public void Up()

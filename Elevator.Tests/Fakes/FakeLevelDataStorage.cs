@@ -13,17 +13,16 @@ namespace Elevator.Tests.Fakes
             throw new InvalidOperationException("HasStoredLevelInfo is not stubbed!");
         }
 
-        public int? StoredCurrentLevel;
-        public void SaveCurrentLevel(int number)
+        public Level StoredCurrentLevel;
+        public void SaveCurrentLevel(Level level)
         {
-            StoredCurrentLevel = number;
+            StoredCurrentLevel = level;
         }
 
-        public int? StubGetCurrentLevel;
-
-        public int GetCurrentLevel()
+        public Level StubGetCurrentLevel;
+        public Level GetCurrentLevel()
         {
-            if (StubGetCurrentLevel.HasValue) return StubGetCurrentLevel.Value;
+            if (StubGetCurrentLevel != null) return StubGetCurrentLevel;
 
             throw new InvalidOperationException("GetCurrentLevel is not stubbed!");
         }

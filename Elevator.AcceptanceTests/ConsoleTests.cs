@@ -15,6 +15,7 @@ namespace Elevator.AcceptanceTests
                 var process = new Process();
                 process.StartInfo.WorkingDirectory = Environment.CurrentDirectory;
                 process.StartInfo.FileName = "Elevator.exe";
+                process.StartInfo.Arguments = "--h haldis";
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.RedirectStandardOutput = true;
 

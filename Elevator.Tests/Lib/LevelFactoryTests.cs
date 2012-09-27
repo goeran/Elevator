@@ -67,7 +67,7 @@ namespace Elevator.Tests.Lib
     {
         public CustomElevatorLevelWithError()
         {
-            throw new Exception("Somethign bad happened");
+            throw new Exception("Something bad happened");
         }
 
         public void Up()

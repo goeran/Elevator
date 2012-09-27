@@ -141,17 +141,35 @@ namespace Elevator.Tests.Lib
         [TestFixture]
         public class When_start_for_the_first_time
         {
+            private FakeLevelDataStorage fakeLevelDataStorage;
+            private Lift lift;
+
+            [SetUp]
+            public void Setup()
+            {
+                fakeLevelDataStorage = new FakeLevelDataStorage();
+                fakeLevelDataStorage.StubHasStoredLevelInfo = false;
+                lift = new Lift(new FakeLogger(), fakeLevelDataStorage);
+            }
+
             [Test]
             public void It_will_store_current_level_number_in_level_datastorage()
             {
-                var fakeLevelDataStorage = new FakeLevelDataStorage();
-                fakeLevelDataStorage.StubHasStoredLevelInfo = false;
-                var lift = new Lift(new FakeLogger(), fakeLevelDataStorage);
                 lift.AddLevel(new Level(1, ""), new Level(2, ""));
+                lift.Start();
+                Assert.AreEqual(new Level(1, ""), fakeLevelDataStorage.StoredCurrentLevel);
+            }
+
+            [Test]
+            public void It_will_call_up_on_the_level_object()
+            {
+                var hasCalledUpDelegate = false;
+                var level1 = new Level(1, "", () => { hasCalledUpDelegate = true; }, () => { });
+                lift.AddLevel(level1);
 
                 lift.Start();
 
-                Assert.AreEqual(new Level(1, ""), fakeLevelDataStorage.StoredCurrentLevel);
+                Assert.IsTrue(hasCalledUpDelegate, "Expected up to be called on level object");
             }
         }
 
@@ -213,6 +231,20 @@ namespace Elevator.Tests.Lib
 
                 lift.Up();
                 lift.Up();
+            }
+
+            [Test]
+            public void It_will_call_up_on_the_level_object()
+            {
+                var hasCalledUpDelegate = false;
+                var level1 = new Level(1, "");
+                var level2 = new Level(2, "", () => { hasCalledUpDelegate = true; }, () => { });
+                lift.AddLevel(level1, level2);
+                lift.Start();
+
+                lift.Up();
+
+                Assert.IsTrue(hasCalledUpDelegate, "Expected up to be called on level object");
             }
         }
     }

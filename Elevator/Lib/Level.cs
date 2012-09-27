@@ -4,16 +4,31 @@ namespace Elevator.Lib
 {
     public class Level
     {
-        public Level(int number, string comment)
+        private readonly Action up;
+        private readonly Action down;
+
+        public Level(int number, string comment) : this(number, comment, () => {}, () => {})
         {
-            if (comment == null) throw new ArgumentNullException();
+        }
+
+        public Level(int number, string comment, Action up, Action down)
+        {
+            if (comment == null || up == null && down == null) 
+                throw new ArgumentNullException();
 
             Number = number;
             Comment = comment;
+            this.down = down;
+            this.up = up;
         }
 
         public int Number { get; private set; }
         public string Comment { get; private set; }
+
+        public void Up()
+        {
+            up();
+        }
 
         public override bool Equals(object obj)
         {

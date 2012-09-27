@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Elevator.Lib;
 using Elevator.Tests.Fakes;
 using NUnit.Framework;
@@ -334,6 +333,5 @@ namespace Elevator.Tests.Lib
                 Assert.IsTrue(fakeLogger.LastEntry.Contains(new Exception("Failed because db is down").ToString()));
             }             
         }
-
     }
 }

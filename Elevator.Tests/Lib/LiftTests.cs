@@ -139,16 +139,34 @@ namespace Elevator.Tests.Lib
         }
 
         [TestFixture]
+        public class When_start_for_the_first_time
+        {
+            [Test]
+            public void It_will_store_current_level_number_in_level_datastorage()
+            {
+                var fakeLevelDataStorage = new FakeLevelDataStorage();
+                fakeLevelDataStorage.StubHasStoredLevelInfo = false;
+                var lift = new Lift(new FakeLogger(), fakeLevelDataStorage);
+                lift.AddLevel(new Level(1, ""), new Level(2, ""));
+
+                lift.Start();
+
+                Assert.AreEqual(1, fakeLevelDataStorage.StoredCurrentLevel);
+            }
+        }
+
+        [TestFixture]
         public class When_going_up
         {
             private Lift lift;
+            private FakeLevelDataStorage fakeLevelDataStorage;
 
             [SetUp]
             public void Setup()
             {
-                var fakeDataStorage = new FakeLevelDataStorage();
-                fakeDataStorage.StubHasStoredLevelInfo = false;
-                lift = new Lift(new FakeLogger(), fakeDataStorage);
+                fakeLevelDataStorage = new FakeLevelDataStorage();
+                fakeLevelDataStorage.StubHasStoredLevelInfo = false;
+                lift = new Lift(new FakeLogger(), fakeLevelDataStorage);
             }
 
             [Test]
@@ -170,6 +188,18 @@ namespace Elevator.Tests.Lib
                 lift.Up();
 
                 Assert.AreEqual(level2, lift.CurrentLevel);
+            }
+
+            [Test]
+            public void It_will_store_current_level_number_in_level_datastorage()
+            {
+                lift.AddLevel(new Level(1, ""), new Level(2, ""), new Level(3, ""));
+                lift.Start();
+
+                lift.Up();
+
+                Assert.IsTrue(fakeLevelDataStorage.StoredCurrentLevel.HasValue, "Expected current level number to be stored");
+                Assert.AreEqual(2, fakeLevelDataStorage.StoredCurrentLevel);
             }
 
             [Test]

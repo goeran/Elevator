@@ -57,17 +57,25 @@ namespace Elevator.Lib
             else
             {
                 CurrentLevel = levels.First().Value;
+                StoreCurrentLevelInfo();
             }
             Announce("Current level: {0}, {1}", CurrentLevel.Number, CurrentLevel.Comment);
+        }
+
+        private void StoreCurrentLevelInfo()
+        {
+            levelDataStorage.SaveCurrentLevel(CurrentLevel.Number);
         }
 
         public void Up()
         {
             if (!isStarted) throw new InvalidOperationException("Lift must be started before going up");
 
-            var index = levels.IndexOfValue(CurrentLevel);
-            if (index >= levels.Count - 1) throw new InvalidOperationException("On the top level");
-            CurrentLevel = levels.ElementAt(++index).Value;
+            var currentLevelNumber = levels.IndexOfValue(CurrentLevel);
+            if (currentLevelNumber >= levels.Count - 1) throw new InvalidOperationException("On the top level");
+            var newCurrentLevelNumber = ++currentLevelNumber;
+            CurrentLevel = levels.ElementAt(newCurrentLevelNumber).Value;
+            StoreCurrentLevelInfo();
         }
     }
 }

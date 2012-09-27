@@ -6,22 +6,22 @@ namespace Elevator.Lib
     {
         private readonly Action up;
 
-        public Level(int number, string comment) : this(number, comment, () => {})
+        public Level(int number, string description) : this(number, description, () => {})
         {
         }
 
-        public Level(int number, string comment, Action up)
+        public Level(int number, string description, Action up)
         {
-            if (comment == null || up == null) 
+            if (description == null || up == null) 
                 throw new ArgumentNullException();
 
             Number = number;
-            Comment = comment;
+            Description = description;
             this.up = up;
         }
 
         public int Number { get; private set; }
-        public string Comment { get; private set; }
+        public string Description { get; private set; }
 
         public void Up()
         {

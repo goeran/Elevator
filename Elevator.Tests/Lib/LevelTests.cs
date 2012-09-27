@@ -37,7 +37,7 @@ namespace Elevator.Tests.Lib
             public void It_should_set_Description_property()
             {
                 var level = new Level(1, "initial schema");
-                Assert.AreEqual("initial schema", level.Comment);
+                Assert.AreEqual("initial schema", level.Description);
             }
         }
 

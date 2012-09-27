@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Fakes\FakeLevelDataStorage.cs" />
     <Compile Include="Fakes\FakeLogger.cs" />
+    <Compile Include="Lib\ElevatorLevelClassFinderTests.cs" />
     <Compile Include="Lib\LevelFactoryTests.cs" />
     <Compile Include="Lib\LevelTests.cs" />
     <Compile Include="Lib\LiftTests.cs" />

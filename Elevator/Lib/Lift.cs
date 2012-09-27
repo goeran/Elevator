@@ -39,7 +39,7 @@ namespace Elevator.Lib
             if (levels.ContainsKey(level.Number)) throw new ArgumentException("Level already exists");
 
             levels.Add(level.Number, level);
-            Announce("Level added: {0}, {1}", level.Number, level.Comment);
+            Announce("Level added: {0}, {1}", level.Number, level.Description);
         }
 
         public void Start()
@@ -53,12 +53,12 @@ namespace Elevator.Lib
             {
                 var storedLevel = levelDataStorage.GetCurrentLevel();
                 CurrentLevel = levels[storedLevel.Number];
-                Announce("Current level: {0}, {1}", CurrentLevel.Number, CurrentLevel.Comment);
+                Announce("Current level: {0}, {1}", CurrentLevel.Number, CurrentLevel.Description);
             }
             else
             {
                 CurrentLevel = levels.First().Value;
-                Announce("Current level: {0}, {1}", CurrentLevel.Number, CurrentLevel.Comment);
+                Announce("Current level: {0}, {1}", CurrentLevel.Number, CurrentLevel.Description);
                 LiftUp();
             }
         }
@@ -87,7 +87,7 @@ namespace Elevator.Lib
             }
             catch (Exception ex)
             {
-                Announce("Failed to lift: Level {0}, {1}", CurrentLevel.Number, CurrentLevel.Comment);
+                Announce("Failed to lift: Level {0}, {1}", CurrentLevel.Number, CurrentLevel.Description);
                 Announce(ex.ToString());
             }
         }

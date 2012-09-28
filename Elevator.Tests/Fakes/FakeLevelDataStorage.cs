@@ -5,6 +5,13 @@ namespace Elevator.Tests.Fakes
 {
     public class FakeLevelDataStorage : ILevelDataStorage
     {
+        public static int NumberOfInstancesCreated;
+
+        public FakeLevelDataStorage()
+        {
+            NumberOfInstancesCreated++;
+        }
+
         public bool? StubHasStoredLevelInfo;
         public bool HasStoredLevelInfo()
         {

@@ -36,5 +36,27 @@ namespace Elevator.AcceptanceTests
                 Assert.AreEqual("\tElevator.exe -up -assembly:name.dll", fakeLogger.LastEntry());
             }
         }
+
+        [TestFixture]
+        public class When_running_with_valid_args
+        {
+            private FakeLogger fakeLogger;
+
+            [SetUp]
+            public void Setup()
+            {
+                fakeLogger = new FakeLogger();
+                Shell.LoggerFactory = () => fakeLogger;
+            }
+
+            [Test]
+            public void It_will_create_a_LevelDataStorage_object_by_searching_for_classes_in_the_named_assembly()
+            {
+                Shell.Run("-up", "-assembly:Elevator.AcceptanceTests.dll");
+
+                Assert.AreEqual(1, FakeLevelDataStorage.NumberOfInstancesCreated, "Expected LevelDataStorage object to be created");
+            }
+        }
+
     }
 }

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using Elevator.Lib;
 using Elevator.Lib.Internal;
 using Mono.Options;
@@ -37,6 +40,13 @@ namespace Elevator
                 logger.Log("You have to specify migration assembly:");
                 logger.Log("\tElevator.exe -up -assembly:name.dll");
             }
+
+            if (config.IsValid())
+            {
+                var migrationAssembly = Assembly.LoadFrom(Path.Combine(Environment.CurrentDirectory, config.AssemblyName));
+                var levelDataStorageClasses = new LevelDataStorageClassFinder().Find(migrationAssembly);
+                Activator.CreateInstance(levelDataStorageClasses.First());
+            }
         }
 
         class ElevatorConfiguration
@@ -44,6 +54,12 @@ namespace Elevator
             public string Direction { get; set; }
             public bool AssemblyIsSpecified { get; set; }
             public string AssemblyName { get; set; }
+
+            public bool IsValid()
+            {
+                return !string.IsNullOrEmpty(Direction) &&
+                       AssemblyIsSpecified;
+            }
         }
     }
 }

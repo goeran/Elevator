@@ -47,8 +47,9 @@
     <Compile Include="Lib\ILevelDataStorage.cs" />
     <Compile Include="Lib\ILogger.cs" />
     <Compile Include="Lib\Internal\ConsoleLogger.cs" />
-    <Compile Include="Lib\Internal\ElevatorLevelClassMetadata.cs" />
+    <Compile Include="Lib\Internal\ClassMetadata.cs" />
     <Compile Include="Lib\Level.cs" />
+    <Compile Include="Lib\LevelDataStorageClassFinder.cs" />
     <Compile Include="Lib\LevelFactory.cs" />
     <Compile Include="Lib\Lift.cs" />
     <Compile Include="Program.cs" />

@@ -15,12 +15,12 @@ namespace Elevator.Lib
             var allClasses = assembly.GetTypes();
 
             return (from aClass in allClasses
-                    let classMeta = new ElevatorLevelClassMetadata(aClass)
+                    let classMeta = new ClassMetadata(aClass)
                     where classMeta.NameIgnoringCaseStartsWith("elevatorlevel") && 
                         classMeta.HasPublicConstructorWithZeroParameters() && 
-                        classMeta.HasLevelField() && 
-                        classMeta.HasDescriptionField() && 
-                        classMeta.HasUpMethod()
+                        classMeta.HasField("level") && 
+                        classMeta.HasField("description") && 
+                        classMeta.HasMethod("up")
                     select aClass).ToList();
         }
     }

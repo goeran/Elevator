@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace Elevator.Tests.Lib
 {
-    class LiftTests
+    public class LiftTests
     {
         [TestFixture]
         public class When_creating

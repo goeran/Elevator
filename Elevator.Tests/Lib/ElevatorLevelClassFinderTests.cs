@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace Elevator.Tests.Lib
 {
-    class ElevatorLevelClassFinderTests
+    public class ElevatorLevelClassFinderTests
     {
         [TestFixture]
         public class When_search_for_all_ElevatorLevel_Classes_in_an_assembly

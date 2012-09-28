@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 namespace Elevator.Tests.Lib
 {
-    class LevelDataStorageClassFinderTests
+    public class LevelDataStorageClassFinderTests
     {
         [TestFixture]
         public class When_searching_for_all_LevelDataStorage_classes_in_assembly

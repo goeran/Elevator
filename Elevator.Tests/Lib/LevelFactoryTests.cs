@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Elevator.Tests.Lib
 {
-    class LevelFactoryTests
+    public class LevelFactoryTests
     {
         [TestFixture]
         public class When_creting_Level_object

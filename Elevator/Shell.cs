@@ -45,7 +45,14 @@ namespace Elevator
             {
                 var migrationAssembly = Assembly.LoadFrom(Path.Combine(Environment.CurrentDirectory, config.AssemblyName));
                 var levelDataStorageClasses = new LevelDataStorageClassFinder().Find(migrationAssembly);
-                Activator.CreateInstance(levelDataStorageClasses.First());
+                if (levelDataStorageClasses.Any())
+                {
+                    Activator.CreateInstance(levelDataStorageClasses.First());
+                }
+                else
+                {
+                    logger.Log("Could not find a class in assembly 'Tests.Empty.dll' that implements the ILevelDataStorage interface.");
+                }
             }
         }
 

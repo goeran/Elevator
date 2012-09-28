@@ -56,6 +56,14 @@ namespace Elevator.AcceptanceTests
 
                 Assert.AreEqual(1, FakeLevelDataStorage.NumberOfInstancesCreated, "Expected LevelDataStorage object to be created");
             }
+
+            [Test]
+            public void It_will_print_help_if_no_LevelDataStorage_class_is_found_in_named_assembly()
+            {
+                Shell.Run("-up", "-assembly:Tests.Empty.dll");
+
+                Assert.AreEqual("Could not find a class in assembly 'Tests.Empty.dll' that implements the ILevelDataStorage interface.", fakeLogger.LastEntry());
+            }
         }
 
     }

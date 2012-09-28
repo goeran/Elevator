@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using Elevator.Tests.Fakes;
 using NUnit.Framework;
 
 namespace Elevator.AcceptanceTests
@@ -7,26 +6,35 @@ namespace Elevator.AcceptanceTests
     class ConsoleTests
     {
         [TestFixture]
-        public class When_running
+        public class When_running_without_specifying_args
         {
-            [Test]
-            public void bla()
-            {
-                var process = new Process();
-                process.StartInfo.WorkingDirectory = Environment.CurrentDirectory;
-                process.StartInfo.FileName = "Elevator.exe";
-                process.StartInfo.Arguments = "--h haldis";
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.RedirectStandardOutput = true;
+            private FakeLogger fakeLogger;
 
-                process.Start();
-                
-                using (var sr = process.StandardOutput)
-                {
-                    Console.WriteLine(sr.ReadToEnd());
-                }
+            [SetUp]
+            public void Setup()
+            {
+                fakeLogger = new FakeLogger();
+                Shell.LoggerFactory = () => fakeLogger;
+            }
+
+            [Test]
+            public void It_will_print_help_for_direction()
+            {
+                Shell.Run();
+
+                Assert.AreEqual("You have to specify direction:", fakeLogger.LastEntry(-2));
+                Assert.AreEqual("\tElevator.exe -up, for going up", fakeLogger.LastEntry(-1));
+                Assert.AreEqual("\tElevator.exe -down, for going down (not supported yet)", fakeLogger.LastEntry());
+            }
+
+            [Test]
+            public void It_will_print_help_for_migration_assembly()
+            {
+                Shell.Run("-up");
+
+                Assert.AreEqual("You have to specify migration assembly:", fakeLogger.LastEntry(-1));
+                Assert.AreEqual("\tElevator.exe -up -assembly:name.dll", fakeLogger.LastEntry());
             }
         }
-
     }
 }

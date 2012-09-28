@@ -58,7 +58,7 @@ namespace Elevator.Tests.Lib
             {
                 lift.AddLevel(new Level(1, "initial data structure"));
 
-                Assert.AreEqual("Level added: 1, initial data structure", fakeLogger.LastEntry);
+                Assert.AreEqual("Level added: 1, initial data structure", fakeLogger.LastEntry());
             }
         }
 
@@ -134,7 +134,7 @@ namespace Elevator.Tests.Lib
             {
                 lift.AddLevel(new Level(1, "ground level"));
                 lift.Start();
-                Assert.AreEqual("Current level: 1, ground level", fakeLogger.LastEntry);
+                Assert.AreEqual("Current level: 1, ground level", fakeLogger.LastEntry());
             }
         }
 
@@ -209,7 +209,7 @@ namespace Elevator.Tests.Lib
                 lift.Start();
 
                 Assert.AreEqual("Failed to lift: Level 1, init setup", fakeLogger.Entries[fakeLogger.Entries.Count - 2]);
-                Assert.IsTrue(fakeLogger.LastEntry.Contains(new Exception("Failed because db is down").ToString()));
+                Assert.IsTrue(fakeLogger.LastEntry().Contains(new Exception("Failed because db is down").ToString()));
             }             
         }
 
@@ -330,7 +330,7 @@ namespace Elevator.Tests.Lib
                 lift.Up();
 
                 Assert.AreEqual("Failed to lift: Level 2, level 2", fakeLogger.Entries[fakeLogger.Entries.Count - 2]);
-                Assert.IsTrue(fakeLogger.LastEntry.Contains(new Exception("Failed because db is down").ToString()));
+                Assert.IsTrue(fakeLogger.LastEntry().Contains(new Exception("Failed because db is down").ToString()));
             }             
         }
     }

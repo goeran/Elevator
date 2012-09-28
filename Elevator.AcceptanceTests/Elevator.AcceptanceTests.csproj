@@ -45,6 +45,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Elevator.Tests\Fakes\FakeLevelDataStorage.cs">
+      <Link>Fakes\FakeLevelDataStorage.cs</Link>
+    </Compile>
+    <Compile Include="..\Elevator.Tests\Fakes\FakeLogger.cs">
+      <Link>Fakes\FakeLogger.cs</Link>
+    </Compile>
     <Compile Include="ConsoleTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

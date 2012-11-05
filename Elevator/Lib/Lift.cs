@@ -65,25 +65,37 @@ namespace Elevator.Lib
 
         public void Up()
         {
-            if (!isStarted) throw new InvalidOperationException("Lift must be started before going up");
+            GuardToMakeSureLiftIsStarted();
             PrepareLiftToNextLevel();
             LiftUp();
+        }
+
+        private void GuardToMakeSureLiftIsStarted()
+        {
+            if (!isStarted) throw new InvalidOperationException("Lift must be started before going up");
         }
 
         private void PrepareLiftToNextLevel()
         {
             var currentLevelNumber = levels.IndexOfValue(CurrentLevel);
-            if (currentLevelNumber >= levels.Count - 1) throw new InvalidOperationException("On the top level");
+            if (levels.Count > 1 && currentLevelNumber >= levels.Count - 1) throw new InvalidOperationException("On the top level");
             var newCurrentLevelNumber = ++currentLevelNumber;
-            CurrentLevel = levels.ElementAt(newCurrentLevelNumber).Value;
+            if (newCurrentLevelNumber < levels.Count)
+            {
+                CurrentLevel = levels.ElementAt(newCurrentLevelNumber).Value;
+            }
         }
 
         private void LiftUp()
         {
             try
             {
-                CurrentLevel.Up();
-                StoreCurrentLevelInfo();
+                if (!levelDataStorage.HasStoredLevelInfo() || 
+                    CurrentLevel.Number > levelDataStorage.GetCurrentLevel().Number)
+                {
+                    CurrentLevel.Up();
+                    StoreCurrentLevelInfo();
+                }
             }
             catch (Exception ex)
             {
@@ -95,6 +107,21 @@ namespace Elevator.Lib
         private void StoreCurrentLevelInfo()
         {
             levelDataStorage.SaveCurrentLevel(CurrentLevel);
+        }
+
+        public void Top()
+        {
+            GuardToMakeSureLiftIsStarted();
+
+            while (CurrentLevel.Number < TopLevel().Number)
+            {
+                Up();
+            }
+        }
+
+        private Level TopLevel()
+        {
+            return levels.Last().Value;
         }
     }
 }

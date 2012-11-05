@@ -1,4 +1,5 @@
-﻿using Elevator.Tests.Fakes;
+﻿using Elevator.AcceptanceTests.Fakes;
+using Elevator.Tests.Fakes;
 using NUnit.Framework;
 
 namespace Elevator.AcceptanceTests
@@ -54,7 +55,7 @@ namespace Elevator.AcceptanceTests
             {
                 Shell.Run("-up", "-assembly:Elevator.AcceptanceTests.dll");
 
-                Assert.AreEqual(1, FakeLevelDataStorage.NumberOfInstancesCreated, "Expected LevelDataStorage object to be created");
+                Assert.AreEqual(1, AcceptanceTestFakeLevelDataStorage.NumberOfInstancesCreated, "Expected LevelDataStorage object to be created");
             }
 
             [Test]

@@ -8,13 +8,15 @@ namespace Elevator.Lib
 {
     public abstract class MongoDbLevelDataStorage : ILevelDataStorage
     {
-        private readonly MongoServer server;
-        private readonly MongoDatabase database;
-        private readonly MongoCollection<LevelDTO> elevatorCollection;
+        private MongoServer server;
+        private MongoDatabase database;
+        private MongoCollection<LevelDTO> elevatorCollection;
         private const string SpecialCollectionNameForElevator = "__Elevator.Levels";
+        private bool isInitialized;
 
-        public MongoDbLevelDataStorage()
+        public void Initialize()
         {
+            isInitialized = true;
             server = MongoServer.Create(ServerUrl);
             database = server.GetDatabase(DatabaseName);
 
@@ -24,19 +26,28 @@ namespace Elevator.Lib
 
         private void CreateElevatorCollectionIfItDoesntExist()
         {
+            GuardForInitialized();
             if (!database.CollectionExists(SpecialCollectionNameForElevator))
             {
                 database.CreateCollection(SpecialCollectionNameForElevator);
             }
         }
 
+        private void GuardForInitialized()
+        {
+            if (!isInitialized)
+                throw new InvalidOperationException("Initialize must be called before any method on this object, to setup dependencies");
+        }
+
         public bool HasStoredLevelInfo()
         {
+            GuardForInitialized();
             return elevatorCollection.Count() > 0;
         }
 
         public void SaveCurrentLevel(Level level)
         {
+            GuardForInitialized();
             var levelDto = new LevelDTO()
             {
                 LevelNumber = level.Number,
@@ -58,6 +69,7 @@ namespace Elevator.Lib
 
         public Level GetCurrentLevel()
         {
+            GuardForInitialized();
             if (!HasStoredLevelInfo())
                 throw new InvalidOperationException("No Level info is stored");
 

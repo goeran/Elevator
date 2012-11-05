@@ -16,6 +16,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elevator.AcceptanceTests", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Empty", "Tests.Empty\Tests.Empty.csproj", "{39141D90-D659-4F6B-A49D-3B6701893029}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget", "nuget", "{8A669B28-EBF6-4605-8FA2-8ADCDD37F3BB}"
+	ProjectSection(SolutionItems) = preProject
+		nuget\Elevator.nuspec = nuget\Elevator.nuspec
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{C0E2DC0F-A8E4-449B-9C61-FDBD8FC3C9B5}"
+	ProjectSection(SolutionItems) = preProject
+		build\build.proj = build\build.proj
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

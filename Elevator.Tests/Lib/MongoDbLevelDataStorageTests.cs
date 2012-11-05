@@ -97,6 +97,7 @@ namespace Elevator.Tests.Lib
             public void Setup()
             {
                 mongoDbLevelDataStorage = new CustomMongoDbLevelDataStorage();
+                mongoDbLevelDataStorage.Initialize();
 
                 var mongoServer = MongoServer.Create(mongoDbLevelDataStorage.ServerUrl);
                 database = mongoServer.GetDatabase(mongoDbLevelDataStorage.DatabaseName);

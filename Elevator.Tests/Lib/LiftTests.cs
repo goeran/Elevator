@@ -279,6 +279,7 @@ namespace Elevator.Tests.Lib
                 var hasCalledUpDelegate = false;
                 var level1 = new Level(1, "");
                 var level2 = new Level(2, "", () => { hasCalledUpDelegate = true; });
+                fakeLevelDataStorage.StubGetCurrentLevel = level1;
                 lift.AddLevel(level1, level2);
                 lift.Start();
 
@@ -301,7 +302,63 @@ namespace Elevator.Tests.Lib
                 Assert.AreNotEqual(level2, fakeLevelDataStorage.StoredCurrentLevel);
                 Assert.AreEqual(level1, fakeLevelDataStorage.StoredCurrentLevel);
             }
+
+            [Test]
+            public void It_will_handle_elevators_with_only_one_level()
+            {
+                fakeLevelDataStorage.StubHasStoredLevelInfo = null;
+                var upCallCount = 0;
+                var groundLevel = new Level(0, "The only level", () => upCallCount++);
+                lift.AddLevel(groundLevel);
+                lift.Start();
+
+                lift.Up();
+
+                Assert.AreEqual(1, upCallCount);
+            }
         }
+
+        [TestFixture]
+        public class When_going_to_the_top 
+        {
+            private Lift lift;
+            private FakeLevelDataStorage fakeLevelDataStorage;
+
+            [SetUp]
+            public void Setup()
+            {
+                fakeLevelDataStorage = new FakeLevelDataStorage();
+                fakeLevelDataStorage.StubHasStoredLevelInfo = false;
+                lift = new Lift(new FakeLogger(), fakeLevelDataStorage);
+            }
+
+            [Test]
+            [ExpectedException(typeof(InvalidOperationException), ExpectedMessage = "Lift must be started before going up")]
+            public void It_requires_lift_to_be_started()
+            {
+                lift.Top();
+            }
+
+            [Test]
+            public void It_will_go_up_all_the_levels()
+            {
+                var level1Visited = 0;
+                var level2Visited = 0;
+                var level3Visited = 0;
+                var level1 = new Level(1, "", () => level1Visited++);
+                var level2 = new Level(2, "", () => level2Visited++);
+                var level3 = new Level(3, "", () => level3Visited++);
+                lift.AddLevel(level1, level2, level3);
+                lift.Start();
+
+                lift.Top();
+
+                Assert.AreEqual(1, level1Visited, "Expected level 1 to be visited");
+                Assert.AreEqual(1, level2Visited, "Expected level 2 to be visited");
+                Assert.AreEqual(1, level3Visited, "Expected level 3 to be visited");
+            }
+        }
+
 
         [TestFixture]
         public class When_going_up_and_lift_fails

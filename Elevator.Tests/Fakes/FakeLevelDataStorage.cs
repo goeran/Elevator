@@ -13,11 +13,12 @@ namespace Elevator.Tests.Fakes
         }
 
         public bool? StubHasStoredLevelInfo;
+
         public bool HasStoredLevelInfo()
         {
             if (StubHasStoredLevelInfo.HasValue) return StubHasStoredLevelInfo.Value;
 
-            throw new InvalidOperationException("HasStoredLevelInfo is not stubbed!");
+            return StoredCurrentLevel != null;
         }
 
         public Level StoredCurrentLevel;
@@ -31,7 +32,13 @@ namespace Elevator.Tests.Fakes
         {
             if (StubGetCurrentLevel != null) return StubGetCurrentLevel;
 
-            throw new InvalidOperationException("GetCurrentLevel is not stubbed!");
+            return StoredCurrentLevel;
+
+        }
+
+        public void Initialize()
+        {
+
         }
     }
 }

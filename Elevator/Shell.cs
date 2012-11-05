@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -47,7 +48,22 @@ namespace Elevator
                 var levelDataStorageClasses = new LevelDataStorageClassFinder().Find(migrationAssembly);
                 if (levelDataStorageClasses.Any())
                 {
-                    Activator.CreateInstance(levelDataStorageClasses.First());
+                    var levelDataStorage = Activator.CreateInstance(levelDataStorageClasses.First()) as ILevelDataStorage;
+                    levelDataStorage.Initialize();
+
+                    var levelsCalsses = new ElevatorLevelClassFinder().Find(migrationAssembly);
+                    var levelFactory = new LevelFactory();
+                    var levels = new List<Level>();
+                    
+                    foreach (var levelClass in levelsCalsses)
+                    {
+                        levels.Add(levelFactory.NewLevel(levelClass));    
+                    }
+
+                    var elevator = new Lift(new ConsoleLogger(), levelDataStorage);
+                    elevator.AddLevel(levels.ToArray());
+                    elevator.Start();
+                    elevator.Top();
                 }
                 else
                 {

@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Lib\DTO\LevelDTO.cs" />
     <Compile Include="Lib\ElevatorLevelClassFinder.cs" />
     <Compile Include="Lib\ILevelDataStorage.cs" />
     <Compile Include="Lib\ILogger.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Lib\LevelDataStorageClassFinder.cs" />
     <Compile Include="Lib\LevelFactory.cs" />
     <Compile Include="Lib\Lift.cs" />
+    <Compile Include="Lib\MongoDbLevelDataStorage.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shell.cs" />

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+	<id>Elevator</id>
+    <version>0.1</version>
+    <title>Elevator</title>
+    <authors>Gøran Hansen</authors>
+    <owners>Gøran Hansen</owners>
+    <licenseUrl>https://github.com/goeran/Elevator</licenseUrl>
+    <projectUrl>https://github.com/goeran/Elevator</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Simple tool to migrate data.</description>
+    <releaseNotes>
+		Init release
+    </releaseNotes>
+    <copyright>Copyright 2012</copyright>
+    <tags>tools database db migration migrate</tags>
+	 <dependencies>
+		<dependency id="mongocsharpdriver" version="1.6.1" />
+    </dependencies>
+  </metadata>
+</package>

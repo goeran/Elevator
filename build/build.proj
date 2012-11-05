@@ -1,0 +1,15 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="info">
+  <Target Name="build">
+    <MSBuild Projects="..\Elevator.sln" Properties="Configuration=Release" Targets="Rebuild"/>
+  </Target>
+  
+  <Target Name="build-nuget" DependsOnTargets="build">
+    <Copy DestinationFolder="..\nuget\lib\" SourceFiles="..\Elevator\bin\Release\Elevator.exe" ContinueOnError="false"/>
+
+    <Exec Command="nuget Pack Elevator.nuspec" WorkingDirectory="..\nuget\"/>
+  </Target>
+
+  <Target Name="info">
+    <Message Text="Youd have to specify target: build, build-nuget"/>
+  </Target>
+</Project>

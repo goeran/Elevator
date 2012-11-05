@@ -65,6 +65,5 @@ namespace Elevator.AcceptanceTests
                 Assert.AreEqual("Could not find a class in assembly 'Tests.Empty.dll' that implements the ILevelDataStorage interface.", fakeLogger.LastEntry());
             }
         }
-
     }
 }

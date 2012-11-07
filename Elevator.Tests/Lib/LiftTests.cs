@@ -100,17 +100,9 @@ namespace Elevator.Tests.Lib
             [Test]
             public void It_will_announce_that_it_has_started()
             {
-                lift.AddLevel(new Level(1, ""));
-                lift.Start();
-                mocked.logger.Should_contain_entry("Elevator started");
-            }
-
-            [Test]
-            public void It_will_announce_current_level()
-            {
                 lift.AddLevel(new Level(1, "ground level"));
                 lift.Start();
-                mocked.logger.Last_entry_should_equals("Current level: 1, ground level");
+                mocked.logger.Should_contain_entry("Elevator started: Current level [Level Number=1, Description=ground level]");
             }
         }
 
@@ -135,6 +127,17 @@ namespace Elevator.Tests.Lib
                 lift.Start();
 
                 Assert.IsTrue(hasCalledUpDelegate, "Expected up to be called on level object");
+            }
+
+            [Test]
+            public void It_will_announce_going_up()
+            {
+                var level1 = new Level(1, "");
+                lift.AddLevel(level1);
+
+                lift.Start();
+
+                mocked.logger.Should_contain_entry("Arrived at [Level Number=1, Description=]");
             }
 
             [Test]
@@ -253,7 +256,6 @@ namespace Elevator.Tests.Lib
                 Assert.IsTrue(hasCalledUpDelegate, "Expected up to be called on level object");
             }
 
-
             [Test]
             public void It_will_not_store_level_if_lift_fails()
             {
@@ -270,7 +272,6 @@ namespace Elevator.Tests.Lib
             [Test]
             public void It_will_handle_elevators_with_only_one_level()
             {
-                mocked.storage.StubHasStoredLevelInfoAndReturn(false);
                 var upCallCount = 0;
                 var groundLevel = new Level(0, "The only level", () => upCallCount++);
                 lift.AddLevel(groundLevel);
@@ -280,6 +281,19 @@ namespace Elevator.Tests.Lib
                 lift.Up();
 
                 Assert.AreEqual(1, upCallCount);
+            }
+
+            [Test]
+            public void It_will_announce_going_up()
+            {
+                var level1 = new Level(1, "level 1");
+                var level2 = new Level(2, "level 2");
+                lift.AddLevel(level1, level2);
+                lift.Start();
+
+                lift.Up();
+
+                mocked.logger.Should_contain_entry("Arrived at [Level Number=2, Description=level 2]");
             }
         }
 

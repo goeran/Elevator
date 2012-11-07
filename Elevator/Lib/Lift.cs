@@ -47,20 +47,23 @@ namespace Elevator.Lib
             if (!levels.Any()) throw new InvalidOperationException("At least one level must be specified before the lift can be started");
 
             isStarted = true;
-            Announce("Elevator started");
-            
             if (levelDataStorage.HasStoredLevelInfo())
             {
                 var storedLevel = levelDataStorage.GetCurrentLevel();
                 CurrentLevel = levels[storedLevel.Number];
-                Announce("Current level: {0}, {1}", CurrentLevel.Number, CurrentLevel.Description);
+                AnnounceStart();
             }
             else
             {
                 CurrentLevel = levels.First().Value;
-                Announce("Current level: {0}, {1}", CurrentLevel.Number, CurrentLevel.Description);
+                AnnounceStart();
                 LiftUp();
             }
+        }
+
+        private void AnnounceStart()
+        {
+            Announce("Elevator started: Current level {0}", CurrentLevel);
         }
 
         public void Up()
@@ -95,6 +98,7 @@ namespace Elevator.Lib
                 {
                     CurrentLevel.Up();
                     StoreCurrentLevelInfo();
+                    Announce("Arrived at {0}", CurrentLevel);
                 }
             }
             catch (Exception ex)

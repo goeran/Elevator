@@ -18,7 +18,20 @@ namespace Elevator.Tests.Fakes
         {
             var matchingEntries = entries.Where(e => e.Equals(expectedEntry));
             var errorMessage = string.Format("Did not find any entries that matched '{0}'", expectedEntry);
-            if (!matchingEntries.Any()) throw new Exception(errorMessage);
+            if (!matchingEntries.Any())
+            {
+                PrintAllEntriesToConsole();
+                throw new Exception(errorMessage);
+            }
+        }
+
+        private void PrintAllEntriesToConsole()
+        {
+            Console.WriteLine("LoggerMock entries:");
+            foreach (var entry in entries)
+            {
+                Console.WriteLine("\t{0}", entry);
+            }
         }
 
         public void Last_entry_should_equals(string expectedText)

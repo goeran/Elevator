@@ -23,8 +23,8 @@ namespace Elevator.AcceptanceTests
             {
                 Shell.Run();
 
-                Assert.AreEqual("You have to specify direction:", fakeLogger.LastEntry(-2));
-                Assert.AreEqual("\tElevator.exe -up, for going up", fakeLogger.LastEntry(-1));
+                fakeLogger.Should_contain_entry("You have to specify direction:");
+                fakeLogger.Should_contain_entry("\tElevator.exe -up, for going up");
                 fakeLogger.Last_entry_should_equals("\tElevator.exe -down, for going down (not supported yet)");
             }
 
@@ -33,7 +33,7 @@ namespace Elevator.AcceptanceTests
             {
                 Shell.Run("-up");
 
-                Assert.AreEqual("You have to specify migration assembly:", fakeLogger.LastEntry(-1));
+                fakeLogger.Should_contain_entry("You have to specify migration assembly:");
                 fakeLogger.Last_entry_should_equals("\tElevator.exe -up -assembly:name.dll");
             }
         }

@@ -122,7 +122,7 @@ namespace Elevator.Tests.Lib
             {
                 lift.AddLevel(new Level(1, ""));
                 lift.Start();
-                Assert.AreEqual("Elevator started", mocked.logger.Entries[mocked.logger.Entries.Count - 2]);
+                mocked.logger.Should_contain_entry("Elevator started");
             }
 
             [Test]
@@ -200,7 +200,7 @@ namespace Elevator.Tests.Lib
 
                 lift.Start();
 
-                Assert.AreEqual("Failed to lift: Level 1, init setup", mocked.logger.Entries[mocked.logger.Entries.Count - 2]);
+                mocked.logger.Should_contain_entry("Failed to lift: Level 1, init setup");
                 mocked.logger.Last_entry_should_start_with("System.Exception: Failed because db is down");
             }             
         }
@@ -406,7 +406,7 @@ namespace Elevator.Tests.Lib
 
                 lift.Up();
 
-                Assert.AreEqual("Failed to lift: Level 2, level 2", mocked.logger.Entries[mocked.logger.Entries.Count - 2]);
+                mocked.logger.Should_contain_entry("Failed to lift: Level 2, level 2");
                 mocked.logger.Last_entry_should_start_with("System.Exception: Failed because db is dow");
             }             
         }

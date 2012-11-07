@@ -7,42 +7,37 @@ namespace Elevator.Tests.Fakes
 {
     public class LoggerMock : ILogger
     {
-        public LoggerMock()
-        {
-            Entries = new List<string>();
-        }
-
+        private readonly List<string> entries = new List<string>();
+        
         public void Log(string message)
         {
-            Entries.Add(message);
+            entries.Add(message);
         }
 
-        public List<string> Entries { get; private set; }
+        public void Should_contain_entry(string expectedEntry)
+        {
+            var matchingEntries = entries.Where(e => e.Equals(expectedEntry));
+            var errorMessage = string.Format("Did not find any entries that matched '{0}'", expectedEntry);
+            if (!matchingEntries.Any()) throw new Exception(errorMessage);
+        }
 
         public void Last_entry_should_equals(string expectedText)
         {
             GuardForNoEntries();
-            var errorMessage = string.Format("Expected last entry to be '{0}', but was '{1}'", expectedText, Entries.Last());
-            if (!Entries.Last().Equals(expectedText)) throw new Exception(errorMessage);
+            var errorMessage = string.Format("Expected last entry to be '{0}', but was '{1}'", expectedText, entries.Last());
+            if (!entries.Last().Equals(expectedText)) throw new Exception(errorMessage);
         }
 
         private void GuardForNoEntries()
         {
-            if (Entries.Count == 0) throw new Exception("No at all entries");
+            if (entries.Count == 0) throw new Exception("No at all entries");
         }
 
         public void Last_entry_should_start_with(string expectedStartingText)
         {
             GuardForNoEntries();
-            var errorMessage = string.Format("Expected last entry to begins with '{0}', but was '{1}'", expectedStartingText, Entries.Last());
-            if (!Entries.Last().StartsWith(expectedStartingText)) throw new Exception(errorMessage);
-        }
-
-        public string LastEntry(int numberOfEntriesBack)
-        {
-            var delta = Entries.Count - numberOfEntriesBack;
-            if (delta < 0) return "";
-            return Entries[Entries.Count - (Math.Abs(numberOfEntriesBack) + 1)];
+            var errorMessage = string.Format("Expected last entry to begins with '{0}', but was '{1}'", expectedStartingText, entries.Last());
+            if (!entries.Last().StartsWith(expectedStartingText)) throw new Exception(errorMessage);
         }
     }
 }

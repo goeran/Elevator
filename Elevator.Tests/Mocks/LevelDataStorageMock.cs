@@ -1,13 +1,12 @@
-﻿using System;
-using Elevator.Lib;
+﻿using Elevator.Lib;
 
 namespace Elevator.Tests.Fakes
 {
-    public class FakeLevelDataStorage : ILevelDataStorage
+    public class LevelDataStorageMock : ILevelDataStorage
     {
         public static int NumberOfInstancesCreated;
 
-        public FakeLevelDataStorage()
+        public LevelDataStorageMock()
         {
             NumberOfInstancesCreated++;
         }

@@ -45,11 +45,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Elevator.Tests\Fakes\FakeLogger.cs">
-      <Link>Fakes\FakeLogger.cs</Link>
+    <Compile Include="..\Elevator.Tests\Mocks\LoggerMock.cs">
+      <Link>Mocks\LoggerMock.cs</Link>
     </Compile>
     <Compile Include="ConsoleTests.cs" />
-    <Compile Include="Fakes\AcceptanceTestFakeLevelDataStorage.cs" />
+    <Compile Include="Mocks\AcceptanceTestFakeLevelDataStorage.cs" />
     <Compile Include="Migrations\ElevatorLevel1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

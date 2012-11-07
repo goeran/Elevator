@@ -14,14 +14,14 @@ namespace Elevator.Tests.Lib
             [ExpectedException(typeof(ArgumentNullException))]
             public void It_requires_logger_to_be_specified()
             {
-                 new Lift(null, new FakeLevelDataStorage());
+                 new Lift(null, new LevelDataStorageMock());
             }
 
             [Test]
             [ExpectedException(typeof(ArgumentNullException))]
             public void It_requires_datastorage_to_be_specified()
             {
-                new Lift(new FakeLogger(), null);
+                new Lift(new LoggerMock(), null);
             }
         }
 
@@ -29,13 +29,13 @@ namespace Elevator.Tests.Lib
         public class When_adding_Level
         {
             private Lift lift;
-            private LifteWithFakes fake;
+            private LiftWithMocks mocked;
 
             [SetUp]
             public void Setup()
             {
-                fake = new LifteWithFakes();
-                lift = fake.liftWithFakes;
+                mocked = new LiftWithMocks();
+                lift = mocked.liftWithFakes;
             }
 
             [Test]
@@ -57,8 +57,7 @@ namespace Elevator.Tests.Lib
             public void It_will_announce_Level_was_added()
             {
                 lift.AddLevel(new Level(1, "initial data structure"));
-
-                Assert.AreEqual("Level loaded: 1, initial data structure", fake.logger.LastEntry());
+                mocked.logger.Last_entry_should_equals("Level loaded: 1, initial data structure");
             }
         }
 
@@ -66,13 +65,13 @@ namespace Elevator.Tests.Lib
         public class When_start
         {
             private Lift lift;
-            private LifteWithFakes fake;
+            private LiftWithMocks mocked;
 
             [SetUp]
             public void Setup()
             {
-                fake = new LifteWithFakes();
-                lift = fake.liftWithFakes;
+                mocked = new LiftWithMocks();
+                lift = mocked.liftWithFakes;
             }
 
             [Test]
@@ -96,8 +95,8 @@ namespace Elevator.Tests.Lib
             [Test]
             public void It_will_set_the_current_level_based_on_current_level_stored_in_datastorage()
             {
-                fake.storage.StubHasStoredLevelInfo = true;
-                fake.storage.StubGetCurrentLevel = new Level(2, "");
+                mocked.storage.StubHasStoredLevelInfo = true;
+                mocked.storage.StubGetCurrentLevel = new Level(2, "");
                 lift.AddLevel(new Level(1, ""), new Level(2, ""), new Level(3, ""));
                 
                 lift.Start();
@@ -123,7 +122,7 @@ namespace Elevator.Tests.Lib
             {
                 lift.AddLevel(new Level(1, ""));
                 lift.Start();
-                Assert.AreEqual("Elevator started", fake.logger.Entries[fake.logger.Entries.Count - 2]);
+                Assert.AreEqual("Elevator started", mocked.logger.Entries[mocked.logger.Entries.Count - 2]);
             }
 
             [Test]
@@ -131,7 +130,7 @@ namespace Elevator.Tests.Lib
             {
                 lift.AddLevel(new Level(1, "ground level"));
                 lift.Start();
-                Assert.AreEqual("Current level: 1, ground level", fake.logger.LastEntry());
+                mocked.logger.Last_entry_should_equals("Current level: 1, ground level");
             }
         }
 
@@ -139,13 +138,13 @@ namespace Elevator.Tests.Lib
         public class When_start_for_the_first_time
         {
             private Lift lift;
-            private LifteWithFakes fake;
+            private LiftWithMocks mock;
 
             [SetUp]
             public void Setup()
             {
-                fake = new LifteWithFakes();
-                lift = fake.liftWithFakes;
+                mock = new LiftWithMocks();
+                lift = mock.liftWithFakes;
             }
 
             [Test]
@@ -153,7 +152,7 @@ namespace Elevator.Tests.Lib
             {
                 lift.AddLevel(new Level(1, ""), new Level(2, ""));
                 lift.Start();
-                Assert.AreEqual(new Level(1, ""), fake.storage.StoredCurrentLevel);
+                Assert.AreEqual(new Level(1, ""), mock.storage.StoredCurrentLevel);
             }
 
             [Test]
@@ -176,7 +175,7 @@ namespace Elevator.Tests.Lib
 
                 lift.Start();
 
-                Assert.IsNull(fake.storage.StoredCurrentLevel, "Current level should not have been stored");
+                Assert.IsNull(mock.storage.StoredCurrentLevel, "Current level should not have been stored");
             }
         }
 
@@ -184,13 +183,13 @@ namespace Elevator.Tests.Lib
         public class When_start_for_the_first_time_and_lift_fails
         {
             private Lift lift;
-            private LifteWithFakes fake;
+            private LiftWithMocks mocked;
 
             [SetUp]
             public void Setup()
             {
-                fake = new LifteWithFakes();
-                lift = fake.liftWithFakes;
+                mocked = new LiftWithMocks();
+                lift = mocked.liftWithFakes;
             }
 
             [Test]
@@ -201,8 +200,8 @@ namespace Elevator.Tests.Lib
 
                 lift.Start();
 
-                Assert.AreEqual("Failed to lift: Level 1, init setup", fake.logger.Entries[fake.logger.Entries.Count - 2]);
-                Assert.IsTrue(fake.logger.LastEntry().Contains(new Exception("Failed because db is down").ToString()));
+                Assert.AreEqual("Failed to lift: Level 1, init setup", mocked.logger.Entries[mocked.logger.Entries.Count - 2]);
+                mocked.logger.Last_entry_should_start_with("System.Exception: Failed because db is down");
             }             
         }
 
@@ -210,15 +209,15 @@ namespace Elevator.Tests.Lib
         public class When_start_for_the_nth_time
         {
             private Lift lift;
-            private LifteWithFakes fake;
+            private LiftWithMocks mock;
 
             [SetUp]
             public void Setup()
             {
-                fake = new LifteWithFakes();
-                fake.storage.StubHasStoredLevelInfo = true;
-                fake.storage.StubGetCurrentLevel = new Level(0, "init level");
-                lift = fake.liftWithFakes;
+                mock = new LiftWithMocks();
+                mock.storage.StubHasStoredLevelInfo = true;
+                mock.storage.StubGetCurrentLevel = new Level(0, "init level");
+                lift = mock.liftWithFakes;
                 lift.AddLevel(new Level(0, "init level"), new Level(1, "first"), new Level(2, "second"));
                 lift.Start();
             }
@@ -232,7 +231,7 @@ namespace Elevator.Tests.Lib
             [Test]
             public void It_will_not_store_current_level()
             {
-                Assert.IsNull(fake.storage.StoredCurrentLevel);
+                Assert.IsNull(mock.storage.StoredCurrentLevel);
             }
         }
 
@@ -240,14 +239,14 @@ namespace Elevator.Tests.Lib
         public class When_going_up
         {
             private Lift lift;
-            private LifteWithFakes fake;
+            private LiftWithMocks mock;
 
             [SetUp]
             public void Setup()
             {
-                fake = new LifteWithFakes();
-                fake.storage.StubHasStoredLevelInfo = false;
-                lift = fake.liftWithFakes;
+                mock = new LiftWithMocks();
+                mock.storage.StubHasStoredLevelInfo = false;
+                lift = mock.liftWithFakes;
             }
 
             [Test]
@@ -279,8 +278,8 @@ namespace Elevator.Tests.Lib
 
                 lift.Up();
 
-                Assert.IsTrue(fake.storage.StoredCurrentLevel != null, "Expected current level number to be stored");
-                Assert.AreEqual(new Level(2, ""), fake.storage.StoredCurrentLevel);
+                Assert.IsTrue(mock.storage.StoredCurrentLevel != null, "Expected current level number to be stored");
+                Assert.AreEqual(new Level(2, ""), mock.storage.StoredCurrentLevel);
             }
 
             [Test]
@@ -302,7 +301,7 @@ namespace Elevator.Tests.Lib
                 var hasCalledUpDelegate = false;
                 var level1 = new Level(1, "");
                 var level2 = new Level(2, "", () => { hasCalledUpDelegate = true; });
-                fake.storage.StubGetCurrentLevel = level1;
+                mock.storage.StubGetCurrentLevel = level1;
                 lift.AddLevel(level1, level2);
                 lift.Start();
 
@@ -322,14 +321,14 @@ namespace Elevator.Tests.Lib
 
                 lift.Start();
 
-                Assert.AreNotEqual(level2, fake.storage.StoredCurrentLevel);
-                Assert.AreEqual(level1, fake.storage.StoredCurrentLevel);
+                Assert.AreNotEqual(level2, mock.storage.StoredCurrentLevel);
+                Assert.AreEqual(level1, mock.storage.StoredCurrentLevel);
             }
 
             [Test]
             public void It_will_handle_elevators_with_only_one_level()
             {
-                fake.storage.StubHasStoredLevelInfo = null;
+                mock.storage.StubHasStoredLevelInfo = null;
                 var upCallCount = 0;
                 var groundLevel = new Level(0, "The only level", () => upCallCount++);
                 lift.AddLevel(groundLevel);
@@ -345,14 +344,14 @@ namespace Elevator.Tests.Lib
         public class When_going_to_the_top 
         {
             private Lift lift;
-            private LifteWithFakes fake;
+            private LiftWithMocks mock;
 
             [SetUp]
             public void Setup()
             {
-                fake = new LifteWithFakes();
-                fake.storage.StubHasStoredLevelInfo = false;
-                lift = fake.liftWithFakes;
+                mock = new LiftWithMocks();
+                mock.storage.StubHasStoredLevelInfo = false;
+                lift = mock.liftWithFakes;
             }
 
             [Test]
@@ -387,14 +386,14 @@ namespace Elevator.Tests.Lib
         public class When_going_up_and_lift_fails
         {
             private Lift lift;
-            private LifteWithFakes fake;
+            private LiftWithMocks mocked;
 
             [SetUp]
             public void Setup()
             {
-                fake = new LifteWithFakes();
-                fake.storage.StubHasStoredLevelInfo = false;
-                lift = fake.liftWithFakes;
+                mocked = new LiftWithMocks();
+                mocked.storage.StubHasStoredLevelInfo = false;
+                lift = mocked.liftWithFakes;
             }
 
             [Test]
@@ -407,8 +406,8 @@ namespace Elevator.Tests.Lib
 
                 lift.Up();
 
-                Assert.AreEqual("Failed to lift: Level 2, level 2", fake.logger.Entries[fake.logger.Entries.Count - 2]);
-                Assert.IsTrue(fake.logger.LastEntry().Contains(new Exception("Failed because db is down").ToString()));
+                Assert.AreEqual("Failed to lift: Level 2, level 2", mocked.logger.Entries[mocked.logger.Entries.Count - 2]);
+                mocked.logger.Last_entry_should_start_with("System.Exception: Failed because db is dow");
             }             
         }
     }

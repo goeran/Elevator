@@ -24,7 +24,7 @@ namespace Elevator.Tests.Lib
             {
                 var classFinder = new LevelDataStorageClassFinder();
                 var levelDataStorageClasses = classFinder.Find(Assembly.GetExecutingAssembly());
-                Assert.Contains(typeof(FakeLevelDataStorage), levelDataStorageClasses.ToList());
+                Assert.Contains(typeof(LevelDataStorageMock), levelDataStorageClasses.ToList());
             }
         }
 

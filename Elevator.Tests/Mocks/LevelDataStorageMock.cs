@@ -12,9 +12,8 @@ namespace Elevator.Tests.Fakes
             NumberOfInstancesCreated++;
         }
 
-
         private bool? stubHasStoredLevelInfo;
-        public void StubStoredLevelInfoAndReturn(bool val)
+        public void StubHasStoredLevelInfoAndReturn(bool val)
         {
             stubHasStoredLevelInfo = val;
         }
@@ -45,12 +44,18 @@ namespace Elevator.Tests.Fakes
             if (storedCurrentLevel != null) throw new Exception(errorMessage);
         }
 
-        public Level StubGetCurrentLevel;
+        private Level stubbedCurrentLevel;
+        public void StubGetCurrentLevelAndReturn(Level stubbedCurrentLevel)
+        {
+            this.stubbedCurrentLevel = stubbedCurrentLevel;
+        }
+
         public Level GetCurrentLevel()
         {
-            if (StubGetCurrentLevel != null) return StubGetCurrentLevel;
-
-            throw new Exception("GetCurrentLevel() must be stubbed");
+            if (stubbedCurrentLevel == null)
+                throw new Exception("GetCurrentLevel() must be stubbed");
+                
+            return stubbedCurrentLevel;
         }
 
         public void Initialize()

@@ -314,6 +314,58 @@ namespace Elevator.Tests.Lib
         }
 
         [TestFixture]
+        public class When_going_to_the_top_for_nth_time : SharedLiftSetup
+        {
+            private int level1VisitedCount, level2VisitedCount, level3VisitedCount, level4VisitedCount;
+            private Level level1, level2, level3, level4;
+
+            [SetUp]
+            public void Setup()
+            {
+                level1VisitedCount = 0;
+                level2VisitedCount = 0;
+                level3VisitedCount = 0;
+                level4VisitedCount = 0;
+                level1 = new Level(1, "", () => level1VisitedCount++);
+                level2 = new Level(2, "", () => level2VisitedCount++);
+                level3 = new Level(3, "", () => level3VisitedCount++);
+                level4 = new Level(4, "", () => level4VisitedCount++);
+                lift.AddLevel(level1, level2, level3, level4);
+                mocked.storage.StubHasStoredLevelInfoAndReturn(true);
+                mocked.storage.StubGetCurrentLevelAndReturn(level2);
+                lift.Start();
+
+                lift.Top();
+            }
+
+            [Test]
+            public void It_should_not_visit_levels_that_are_already_visited()
+            {
+                Assert.AreEqual(0, level1VisitedCount);
+                Assert.AreEqual(0, level2VisitedCount);
+            }
+
+            [Test]
+            public void It_should_visit_unvisited_levels()
+            {
+                Assert.AreEqual(1, level3VisitedCount, "Level 3 should have been visited only once");
+                Assert.AreEqual(1, level4VisitedCount, "Level 4 should have been visited only once");
+            }
+
+            [Test]
+            public void It_should_end_on_top_level()
+            {
+                Assert.AreEqual(level4, lift.CurrentLevel);
+            }
+
+            [Test]
+            public void It_should_store_top_level_as_current_level_in_storage()
+            {
+                mocked.storage.Should_have_saved_current_level(level4);
+            }
+        }
+
+        [TestFixture]
         public class When_going_up_and_lift_fails : SharedLiftSetup
         {
             [Test]

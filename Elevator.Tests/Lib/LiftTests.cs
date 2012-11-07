@@ -29,13 +29,13 @@ namespace Elevator.Tests.Lib
         public class When_adding_Level
         {
             private Lift lift;
-            private FakeLogger fakeLogger;
+            private LifteWithFakes fake;
 
             [SetUp]
             public void Setup()
             {
-                fakeLogger = new FakeLogger();
-                lift = new Lift(fakeLogger, new FakeLevelDataStorage());
+                fake = new LifteWithFakes();
+                lift = fake.liftWithFakes;
             }
 
             [Test]
@@ -58,24 +58,21 @@ namespace Elevator.Tests.Lib
             {
                 lift.AddLevel(new Level(1, "initial data structure"));
 
-                Assert.AreEqual("Level loaded: 1, initial data structure", fakeLogger.LastEntry());
+                Assert.AreEqual("Level loaded: 1, initial data structure", fake.logger.LastEntry());
             }
         }
 
         [TestFixture]
         public class When_start
         {
-            private FakeLogger fakeLogger;
             private Lift lift;
-            private FakeLevelDataStorage fakeLevelDataStorage;
+            private LifteWithFakes fake;
 
             [SetUp]
             public void Setup()
             {
-                fakeLogger = new FakeLogger();
-                fakeLevelDataStorage = new FakeLevelDataStorage();
-                fakeLevelDataStorage.StubHasStoredLevelInfo = false;
-                lift = new Lift(fakeLogger, fakeLevelDataStorage);
+                fake = new LifteWithFakes();
+                lift = fake.liftWithFakes;
             }
 
             [Test]
@@ -99,8 +96,8 @@ namespace Elevator.Tests.Lib
             [Test]
             public void It_will_set_the_current_level_based_on_current_level_stored_in_datastorage()
             {
-                fakeLevelDataStorage.StubHasStoredLevelInfo = true;
-                fakeLevelDataStorage.StubGetCurrentLevel = new Level(2, "");
+                fake.storage.StubHasStoredLevelInfo = true;
+                fake.storage.StubGetCurrentLevel = new Level(2, "");
                 lift.AddLevel(new Level(1, ""), new Level(2, ""), new Level(3, ""));
                 
                 lift.Start();
@@ -126,7 +123,7 @@ namespace Elevator.Tests.Lib
             {
                 lift.AddLevel(new Level(1, ""));
                 lift.Start();
-                Assert.AreEqual("Elevator started", fakeLogger.Entries[fakeLogger.Entries.Count - 2]);
+                Assert.AreEqual("Elevator started", fake.logger.Entries[fake.logger.Entries.Count - 2]);
             }
 
             [Test]
@@ -134,22 +131,21 @@ namespace Elevator.Tests.Lib
             {
                 lift.AddLevel(new Level(1, "ground level"));
                 lift.Start();
-                Assert.AreEqual("Current level: 1, ground level", fakeLogger.LastEntry());
+                Assert.AreEqual("Current level: 1, ground level", fake.logger.LastEntry());
             }
         }
 
         [TestFixture]
         public class When_start_for_the_first_time
         {
-            private FakeLevelDataStorage fakeLevelDataStorage;
             private Lift lift;
+            private LifteWithFakes fake;
 
             [SetUp]
             public void Setup()
             {
-                fakeLevelDataStorage = new FakeLevelDataStorage();
-                fakeLevelDataStorage.StubHasStoredLevelInfo = false;
-                lift = new Lift(new FakeLogger(), fakeLevelDataStorage);
+                fake = new LifteWithFakes();
+                lift = fake.liftWithFakes;
             }
 
             [Test]
@@ -157,7 +153,7 @@ namespace Elevator.Tests.Lib
             {
                 lift.AddLevel(new Level(1, ""), new Level(2, ""));
                 lift.Start();
-                Assert.AreEqual(new Level(1, ""), fakeLevelDataStorage.StoredCurrentLevel);
+                Assert.AreEqual(new Level(1, ""), fake.storage.StoredCurrentLevel);
             }
 
             [Test]
@@ -180,24 +176,21 @@ namespace Elevator.Tests.Lib
 
                 lift.Start();
 
-                Assert.IsNull(fakeLevelDataStorage.StoredCurrentLevel, "Current level should not have been stored");
+                Assert.IsNull(fake.storage.StoredCurrentLevel, "Current level should not have been stored");
             }
         }
 
         [TestFixture]
         public class When_start_for_the_first_time_and_lift_fails
         {
-            private FakeLogger fakeLogger;
-            private FakeLevelDataStorage fakeLevelDataStorage;
             private Lift lift;
+            private LifteWithFakes fake;
 
             [SetUp]
             public void Setup()
             {
-                fakeLogger = new FakeLogger();
-                fakeLevelDataStorage = new FakeLevelDataStorage();
-                fakeLevelDataStorage.StubHasStoredLevelInfo = false;
-                lift = new Lift(fakeLogger, fakeLevelDataStorage);
+                fake = new LifteWithFakes();
+                lift = fake.liftWithFakes;
             }
 
             [Test]
@@ -208,23 +201,53 @@ namespace Elevator.Tests.Lib
 
                 lift.Start();
 
-                Assert.AreEqual("Failed to lift: Level 1, init setup", fakeLogger.Entries[fakeLogger.Entries.Count - 2]);
-                Assert.IsTrue(fakeLogger.LastEntry().Contains(new Exception("Failed because db is down").ToString()));
+                Assert.AreEqual("Failed to lift: Level 1, init setup", fake.logger.Entries[fake.logger.Entries.Count - 2]);
+                Assert.IsTrue(fake.logger.LastEntry().Contains(new Exception("Failed because db is down").ToString()));
             }             
+        }
+
+        [TestFixture]
+        public class When_start_for_the_nth_time
+        {
+            private Lift lift;
+            private LifteWithFakes fake;
+
+            [SetUp]
+            public void Setup()
+            {
+                fake = new LifteWithFakes();
+                fake.storage.StubHasStoredLevelInfo = true;
+                fake.storage.StubGetCurrentLevel = new Level(0, "init level");
+                lift = fake.liftWithFakes;
+                lift.AddLevel(new Level(0, "init level"), new Level(1, "first"), new Level(2, "second"));
+                lift.Start();
+            }
+
+            [Test]
+            public void It_will_stay_on_the_current_left()
+            {
+                Assert.AreEqual(0, lift.CurrentLevel.Number);
+            }
+
+            [Test]
+            public void It_will_not_store_current_level()
+            {
+                Assert.IsNull(fake.storage.StoredCurrentLevel);
+            }
         }
 
         [TestFixture]
         public class When_going_up
         {
             private Lift lift;
-            private FakeLevelDataStorage fakeLevelDataStorage;
+            private LifteWithFakes fake;
 
             [SetUp]
             public void Setup()
             {
-                fakeLevelDataStorage = new FakeLevelDataStorage();
-                fakeLevelDataStorage.StubHasStoredLevelInfo = false;
-                lift = new Lift(new FakeLogger(), fakeLevelDataStorage);
+                fake = new LifteWithFakes();
+                fake.storage.StubHasStoredLevelInfo = false;
+                lift = fake.liftWithFakes;
             }
 
             [Test]
@@ -256,8 +279,8 @@ namespace Elevator.Tests.Lib
 
                 lift.Up();
 
-                Assert.IsTrue(fakeLevelDataStorage.StoredCurrentLevel != null, "Expected current level number to be stored");
-                Assert.AreEqual(new Level(2, ""), fakeLevelDataStorage.StoredCurrentLevel);
+                Assert.IsTrue(fake.storage.StoredCurrentLevel != null, "Expected current level number to be stored");
+                Assert.AreEqual(new Level(2, ""), fake.storage.StoredCurrentLevel);
             }
 
             [Test]
@@ -279,7 +302,7 @@ namespace Elevator.Tests.Lib
                 var hasCalledUpDelegate = false;
                 var level1 = new Level(1, "");
                 var level2 = new Level(2, "", () => { hasCalledUpDelegate = true; });
-                fakeLevelDataStorage.StubGetCurrentLevel = level1;
+                fake.storage.StubGetCurrentLevel = level1;
                 lift.AddLevel(level1, level2);
                 lift.Start();
 
@@ -299,14 +322,14 @@ namespace Elevator.Tests.Lib
 
                 lift.Start();
 
-                Assert.AreNotEqual(level2, fakeLevelDataStorage.StoredCurrentLevel);
-                Assert.AreEqual(level1, fakeLevelDataStorage.StoredCurrentLevel);
+                Assert.AreNotEqual(level2, fake.storage.StoredCurrentLevel);
+                Assert.AreEqual(level1, fake.storage.StoredCurrentLevel);
             }
 
             [Test]
             public void It_will_handle_elevators_with_only_one_level()
             {
-                fakeLevelDataStorage.StubHasStoredLevelInfo = null;
+                fake.storage.StubHasStoredLevelInfo = null;
                 var upCallCount = 0;
                 var groundLevel = new Level(0, "The only level", () => upCallCount++);
                 lift.AddLevel(groundLevel);
@@ -322,14 +345,14 @@ namespace Elevator.Tests.Lib
         public class When_going_to_the_top 
         {
             private Lift lift;
-            private FakeLevelDataStorage fakeLevelDataStorage;
+            private LifteWithFakes fake;
 
             [SetUp]
             public void Setup()
             {
-                fakeLevelDataStorage = new FakeLevelDataStorage();
-                fakeLevelDataStorage.StubHasStoredLevelInfo = false;
-                lift = new Lift(new FakeLogger(), fakeLevelDataStorage);
+                fake = new LifteWithFakes();
+                fake.storage.StubHasStoredLevelInfo = false;
+                lift = fake.liftWithFakes;
             }
 
             [Test]
@@ -363,17 +386,15 @@ namespace Elevator.Tests.Lib
         [TestFixture]
         public class When_going_up_and_lift_fails
         {
-            private FakeLogger fakeLogger;
-            private FakeLevelDataStorage fakeLevelDataStorage;
             private Lift lift;
+            private LifteWithFakes fake;
 
             [SetUp]
             public void Setup()
             {
-                fakeLogger = new FakeLogger();
-                fakeLevelDataStorage = new FakeLevelDataStorage();
-                fakeLevelDataStorage.StubHasStoredLevelInfo = false;
-                lift = new Lift(fakeLogger, fakeLevelDataStorage);
+                fake = new LifteWithFakes();
+                fake.storage.StubHasStoredLevelInfo = false;
+                lift = fake.liftWithFakes;
             }
 
             [Test]
@@ -386,8 +407,8 @@ namespace Elevator.Tests.Lib
 
                 lift.Up();
 
-                Assert.AreEqual("Failed to lift: Level 2, level 2", fakeLogger.Entries[fakeLogger.Entries.Count - 2]);
-                Assert.IsTrue(fakeLogger.LastEntry().Contains(new Exception("Failed because db is down").ToString()));
+                Assert.AreEqual("Failed to lift: Level 2, level 2", fake.logger.Entries[fake.logger.Entries.Count - 2]);
+                Assert.IsTrue(fake.logger.LastEntry().Contains(new Exception("Failed because db is down").ToString()));
             }             
         }
     }

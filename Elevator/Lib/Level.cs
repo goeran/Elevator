@@ -63,5 +63,10 @@ namespace Elevator.Lib
 
             return !a.Equals(b);
         }
+
+        public override string ToString()
+        {
+            return string.Format("[Level Number={0}, Description={1}]", Number, Description);
+        }
     }
 }

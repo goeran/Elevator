@@ -26,18 +26,8 @@ namespace Elevator.Tests.Lib
         }
 
         [TestFixture]
-        public class When_adding_Level
+        public class When_adding_Level : SharedLiftSetup
         {
-            private Lift lift;
-            private LiftWithMocks mocked;
-
-            [SetUp]
-            public void Setup()
-            {
-                mocked = new LiftWithMocks();
-                lift = mocked.liftWithFakes;
-            }
-
             [Test]
             [ExpectedException(typeof(ArgumentNullException))]
             public void It_throws_exception_if_null_obj()
@@ -62,19 +52,8 @@ namespace Elevator.Tests.Lib
         }
 
         [TestFixture]
-        public class When_start
+        public class When_start : SharedLiftSetup
         {
-            private Lift lift;
-            private LiftWithMocks mocked;
-
-            [SetUp]
-            public void Setup()
-            {
-                mocked = new LiftWithMocks();
-                mocked.storage.StubHasStoredLevelInfoAndReturn(false);
-                lift = mocked.liftWithFakes;
-            }
-
             [Test]
             [ExpectedException(typeof(InvalidOperationException), ExpectedMessage = "At least one level must be specified before the lift can be started")]
             public void It_requires_at_least_one_level_bare_it_can_be_started()
@@ -136,19 +115,8 @@ namespace Elevator.Tests.Lib
         }
 
         [TestFixture]
-        public class When_start_for_the_first_time
+        public class When_start_for_the_first_time : SharedLiftSetup
         {
-            private Lift lift;
-            private LiftWithMocks mocked;
-
-            [SetUp]
-            public void Setup()
-            {
-                mocked = new LiftWithMocks();
-                mocked.storage.StubHasStoredLevelInfoAndReturn(false);
-                lift = mocked.liftWithFakes;
-            }
-
             [Test]
             public void It_will_store_current_level_info_in_datastorage()
             {
@@ -182,19 +150,8 @@ namespace Elevator.Tests.Lib
         }
 
         [TestFixture]
-        public class When_start_for_the_first_time_and_lift_fails
+        public class When_start_for_the_first_time_and_lift_fails : SharedLiftSetup
         {
-            private Lift lift;
-            private LiftWithMocks mocked;
-
-            [SetUp]
-            public void Setup()
-            {
-                mocked = new LiftWithMocks();
-                mocked.storage.StubHasStoredLevelInfoAndReturn(false);
-                lift = mocked.liftWithFakes;
-            }
-
             [Test]
             public void It_will_announce_the_failed_lift()
             {
@@ -209,18 +166,13 @@ namespace Elevator.Tests.Lib
         }
 
         [TestFixture]
-        public class When_start_for_the_nth_time
+        public class When_start_for_the_nth_time : SharedLiftSetup
         {
-            private Lift lift;
-            private LiftWithMocks mocked;
-
             [SetUp]
             public void Setup()
             {
-                mocked = new LiftWithMocks();
                 mocked.storage.StubHasStoredLevelInfoAndReturn(true);
                 mocked.storage.StubGetCurrentLevelAndReturn(new Level(0, "init level"));
-                lift = mocked.liftWithFakes;
                 lift.AddLevel(new Level(0, "init level"), new Level(1, "first"), new Level(2, "second"));
                 lift.Start();
             }
@@ -239,19 +191,8 @@ namespace Elevator.Tests.Lib
         }
 
         [TestFixture]
-        public class When_going_up
+        public class When_going_up : SharedLiftSetup
         {
-            private Lift lift;
-            private LiftWithMocks mocked;
-
-            [SetUp]
-            public void Setup()
-            {
-                mocked = new LiftWithMocks();
-                mocked.storage.StubHasStoredLevelInfoAndReturn(false);
-                lift = mocked.liftWithFakes;
-            }
-
             [Test]
             [ExpectedException(typeof(InvalidOperationException), ExpectedMessage = "Lift must be started before going up")]
             public void It_requires_lift_to_be_started_before_going_up()
@@ -343,19 +284,8 @@ namespace Elevator.Tests.Lib
         }
 
         [TestFixture]
-        public class When_going_to_the_top 
+        public class When_going_to_the_top : SharedLiftSetup 
         {
-            private Lift lift;
-            private LiftWithMocks mock;
-
-            [SetUp]
-            public void Setup()
-            {
-                mock = new LiftWithMocks();
-                mock.storage.StubHasStoredLevelInfoAndReturn(false);
-                lift = mock.liftWithFakes;
-            }
-
             [Test]
             [ExpectedException(typeof(InvalidOperationException), ExpectedMessage = "Lift must be started before going up")]
             public void It_requires_lift_to_be_started()
@@ -383,21 +313,9 @@ namespace Elevator.Tests.Lib
             }
         }
 
-
         [TestFixture]
-        public class When_going_up_and_lift_fails
+        public class When_going_up_and_lift_fails : SharedLiftSetup
         {
-            private Lift lift;
-            private LiftWithMocks mocked;
-
-            [SetUp]
-            public void Setup()
-            {
-                mocked = new LiftWithMocks();
-                mocked.storage.StubHasStoredLevelInfoAndReturn(false);
-                lift = mocked.liftWithFakes;
-            }
-
             [Test]
             public void It_will_announce_the_failed_lift()
             {
@@ -411,6 +329,20 @@ namespace Elevator.Tests.Lib
                 mocked.logger.Should_contain_entry("Failed to lift: Level 2, level 2");
                 mocked.logger.Last_entry_should_start_with("System.Exception: Failed because db is dow");
             }             
+        }
+
+        public class SharedLiftSetup
+        {
+            protected Lift lift;
+            protected LiftWithMocks mocked;
+
+            [SetUp]
+            public void Setup()
+            {
+                mocked = new LiftWithMocks();
+                mocked.storage.StubHasStoredLevelInfoAndReturn(false);
+                lift = mocked.liftWithFakes;
+            }
         }
     }
 }

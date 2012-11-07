@@ -1,4 +1,5 @@
-﻿using Elevator.Lib;
+﻿using System;
+using Elevator.Lib;
 
 namespace Elevator.Tests.Fakes
 {
@@ -11,13 +12,16 @@ namespace Elevator.Tests.Fakes
             NumberOfInstancesCreated++;
         }
 
-        public bool? StubHasStoredLevelInfo;
+        public void StubStoredLevelInfoAndReturn(bool val)
+        {
+            stubHasStoredLevelInfo = val;
+        }
 
+        private bool? stubHasStoredLevelInfo;
         public bool HasStoredLevelInfo()
         {
-            if (StubHasStoredLevelInfo.HasValue) return StubHasStoredLevelInfo.Value;
-
-            return StoredCurrentLevel != null;
+            if (stubHasStoredLevelInfo == null) throw new Exception("HasStoredLevelInfo must be stubbed");
+            return stubHasStoredLevelInfo.Value;
         }
 
         public Level StoredCurrentLevel;

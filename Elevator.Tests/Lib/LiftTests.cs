@@ -71,6 +71,7 @@ namespace Elevator.Tests.Lib
             public void Setup()
             {
                 mocked = new LiftWithMocks();
+                mocked.storage.StubStoredLevelInfoAndReturn(false);
                 lift = mocked.liftWithFakes;
             }
 
@@ -95,7 +96,7 @@ namespace Elevator.Tests.Lib
             [Test]
             public void It_will_set_the_current_level_based_on_current_level_stored_in_datastorage()
             {
-                mocked.storage.StubHasStoredLevelInfo = true;
+                mocked.storage.StubStoredLevelInfoAndReturn(true);
                 mocked.storage.StubGetCurrentLevel = new Level(2, "");
                 lift.AddLevel(new Level(1, ""), new Level(2, ""), new Level(3, ""));
                 
@@ -144,6 +145,7 @@ namespace Elevator.Tests.Lib
             public void Setup()
             {
                 mock = new LiftWithMocks();
+                mock.storage.StubStoredLevelInfoAndReturn(false);
                 lift = mock.liftWithFakes;
             }
 
@@ -189,6 +191,7 @@ namespace Elevator.Tests.Lib
             public void Setup()
             {
                 mocked = new LiftWithMocks();
+                mocked.storage.StubStoredLevelInfoAndReturn(false);
                 lift = mocked.liftWithFakes;
             }
 
@@ -215,7 +218,7 @@ namespace Elevator.Tests.Lib
             public void Setup()
             {
                 mock = new LiftWithMocks();
-                mock.storage.StubHasStoredLevelInfo = true;
+                mock.storage.StubStoredLevelInfoAndReturn(true);
                 mock.storage.StubGetCurrentLevel = new Level(0, "init level");
                 lift = mock.liftWithFakes;
                 lift.AddLevel(new Level(0, "init level"), new Level(1, "first"), new Level(2, "second"));
@@ -245,7 +248,7 @@ namespace Elevator.Tests.Lib
             public void Setup()
             {
                 mock = new LiftWithMocks();
-                mock.storage.StubHasStoredLevelInfo = false;
+                mock.storage.StubStoredLevelInfoAndReturn(false);
                 lift = mock.liftWithFakes;
             }
 
@@ -328,11 +331,12 @@ namespace Elevator.Tests.Lib
             [Test]
             public void It_will_handle_elevators_with_only_one_level()
             {
-                mock.storage.StubHasStoredLevelInfo = null;
+                mock.storage.StubStoredLevelInfoAndReturn(false);
                 var upCallCount = 0;
                 var groundLevel = new Level(0, "The only level", () => upCallCount++);
                 lift.AddLevel(groundLevel);
                 lift.Start();
+                mock.storage.StubStoredLevelInfoAndReturn(true);
 
                 lift.Up();
 
@@ -350,7 +354,7 @@ namespace Elevator.Tests.Lib
             public void Setup()
             {
                 mock = new LiftWithMocks();
-                mock.storage.StubHasStoredLevelInfo = false;
+                mock.storage.StubStoredLevelInfoAndReturn(false);
                 lift = mock.liftWithFakes;
             }
 
@@ -392,7 +396,7 @@ namespace Elevator.Tests.Lib
             public void Setup()
             {
                 mocked = new LiftWithMocks();
-                mocked.storage.StubHasStoredLevelInfo = false;
+                mocked.storage.StubStoredLevelInfoAndReturn(false);
                 lift = mocked.liftWithFakes;
             }
 

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Elevator.Lib;
 using Elevator.Lib.DTO;
 using MongoDB.Driver;
@@ -27,9 +25,13 @@ namespace Elevator.Tests.Lib
             public void It_should_create_a_new_document_for_the_level()
             {
                 mongoDbLevelDataStorage.SaveCurrentLevel(new Level(0, "Init level"));
+                mongoDbLevelDataStorage.SaveCurrentLevel(new Level(1, "first"));
 
+                Assert.AreEqual(2, elevatorCollection.Count());
                 var levelsWithLevelNumber0 = elevatorCollection.FindAs<LevelDTO>(Query.EQ("LevelNumber", 0));
-                Assert.AreEqual(1, levelsWithLevelNumber0.Count(), "Expected document for the level to be created");
+                Assert.AreEqual(1, levelsWithLevelNumber0.Count(), "Expected document for level 0 to be created");
+                var levelsWithLevelNumber1 = elevatorCollection.FindAs<LevelDTO>(Query.EQ("LevelNumber", 1));
+                Assert.AreEqual(1, levelsWithLevelNumber1.Count(), "Expected document for level 1 to be created");
             }
 
             [Test]
@@ -85,7 +87,6 @@ namespace Elevator.Tests.Lib
                 Assert.AreEqual("Second level", currentLevel.Description);
             }
         }
-
 
         internal class SharedSetupForMongoDb
         {

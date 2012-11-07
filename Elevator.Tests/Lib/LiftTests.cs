@@ -58,7 +58,7 @@ namespace Elevator.Tests.Lib
             {
                 lift.AddLevel(new Level(1, "initial data structure"));
 
-                Assert.AreEqual("Level added: 1, initial data structure", fakeLogger.LastEntry());
+                Assert.AreEqual("Level loaded: 1, initial data structure", fakeLogger.LastEntry());
             }
         }
 

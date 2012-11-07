@@ -39,7 +39,7 @@ namespace Elevator.Lib
             if (levels.ContainsKey(level.Number)) throw new ArgumentException("Level already exists");
 
             levels.Add(level.Number, level);
-            Announce("Level added: {0}, {1}", level.Number, level.Description);
+            Announce("Level loaded: {0}, {1}", level.Number, level.Description);
         }
 
         public void Start()

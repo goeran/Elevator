@@ -2,7 +2,7 @@
 <package >
   <metadata>
 	<id>Elevator</id>
-    <version>0.11</version>
+    <version>0.12</version>
     <title>Elevator</title>
     <authors>Gøran Hansen</authors>
     <owners>Gøran Hansen</owners>
@@ -11,7 +11,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Simple tool to migrate data.</description>
     <releaseNotes>
-		  Small updates, making the Elevator going all the way to the top.
+		  Made the Elevator more verbose. It's now easier to debug by reading
+      the console output.
     </releaseNotes>
     <copyright>Copyright 2012</copyright>
     <tags>tools database db migration migrate</tags>
